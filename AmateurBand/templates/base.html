@@ -1,0 +1,34 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'accounts/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/styles.css' %}">
+{% block extra_css %}{% endblock %}
+    <title>{% if request.path != '/'%}{% block title %}{% endblock %}{% endif %}AmateurBand</title>
+</head>
+<body>
+<header>
+    <h1>AmateurBand</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'main:index' %}">Home</a></li>
+            <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
+            <li><a href="{% url 'main:article'%}">記事を書く</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'accounts:logout' %}" class="logout">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'accounts:login' %}" class="login">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
+<div class="container mt-3">
+    {% block content %}{% endblock %}
+</div>
+<script src="{% static 'AmateurBandSite/js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'AmateurBandSite/js/bootstrap.bundle.min.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+header {
+color: #fff;
+background-color: black;
+position: relative;
+height: 60px;
+padding: 12px;
+margin-bottom: 70px;
+}
+
+header h1 {
+margin: 0;
+padding: 0;
+letter-spacing: 6px;
+line-height: 34px;
+}
+
+nav {
+position: absolute;
+right:50px;
+bottom: -6px;
+}
+nav ul li {
+list-style: none;
+display: inline-block;
+padding: 12px;
+}
