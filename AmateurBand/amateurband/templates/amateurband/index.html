@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-{{ top }}
+<table>
+{% for article in article_list %}
+    <tr>
+        <th>{{article.title}}</th>
+        <td>{{article.text}}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}

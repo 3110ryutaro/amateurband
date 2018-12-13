@@ -49,7 +49,7 @@ class SignUpForm(forms.ModelForm):
     def clean(self):
         super(SignUpForm, self).clean()
         password = self.cleaned_data['password']
-        password2 = self.cleaned_data['password2']
+        password2 = self.cleaned_data['confirm_password']
 
         if password != password2:
             raise forms.ValidationError('パスワードと確認用パスワードが合致していません')
