@@ -1,4 +1,3 @@
-
 from .models import AmateurUser
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
@@ -85,15 +84,15 @@ class LoginForm(forms.Form):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
-    def clean_password(self):
-        """Validation for password"""
-        password = self.cleaned_data['password']
-        return password
-
     def clean_username(self):
         """Validation for username"""
         username = self.cleaned_data['username']
         return username
+
+    def clean_password(self):
+        """Validation for password"""
+        password = self.cleaned_data['password']
+        return password
 
     def clean(self):
         """Validation username corresponding to its password that was saved in Sign-Up."""

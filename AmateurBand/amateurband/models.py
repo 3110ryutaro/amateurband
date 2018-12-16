@@ -8,7 +8,9 @@ class Article(models.Model):
     class Meta:
         db_table = 'article'
 
-    user = models.ForeignKey(AmateurUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(AmateurUser,
+                             related_name='articles',
+                             on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

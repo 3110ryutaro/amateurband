@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect,reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views import View
 from .forms import ArticleForm
 from django.urls import reverse_lazy
@@ -31,8 +31,7 @@ class ArticleView(LoginRequiredMixin, FormView):
 
     def post(self, request):
 
-        user = AmateurUser.objects.get(pk=request.user.user_id)
-        form = ArticleForm(request.POST, user=user)
+        form = ArticleForm(request.POST, user=request.user)
 
         if form.is_valid():
             form.save(commit=True)
@@ -41,4 +40,54 @@ class ArticleView(LoginRequiredMixin, FormView):
             form = ArticleForm
             return render(request, 'amateurband/article.html', {'form': form})
 
+
+class MyPageView(View):
+    def get(self, request, **kwargs):
+
+        user_id = kwargs['user_id']
+        user = AmateurUser.objects.get(user_id=user_id)
+        context = {
+            'mypage': user.username + 'のページです'
+        }
+        return render(request, 'amateurband/mypage.html', context)
+
+
+class ArticleListView(View):
+    def get(self, request):
+        user = request.user
+        article_list = user.articles.all()
+        context = {
+            'article_list': article_list
+        }
+        return render(request, 'amateurband/article_list.html', context)
+
+
+class ArticleEditView(View):
+    def get(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+        form = ArticleForm(instance=article)
+        context = {
+            'form': form
+        }
+        return render(request, 'amateurband/article_edit.html', context)
+
+
+class ArticleUpdateView(View):
+    def get(self):
+        pass
+
+
+class ArticleDeleteView(View):
+    def get(self):
+        pass
+
+
+class MessageView(View):
+    def get(self, request):
+        pass
+
+
+class ProfileView(View):
+    def get(self):
+        pass
 

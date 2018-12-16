@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 
 
 class AmateurUser(AbstractUser):
@@ -13,6 +14,11 @@ class AmateurUser(AbstractUser):
     username = models.CharField(
         max_length=255,
         unique=True,
+        validators=[
+            RegexValidator('^[a-zA-Z0-9]*$',
+                           message='半角英数字を使用してください'
+                           ),
+        ]
     )
     email = models.EmailField(
         unique=True,

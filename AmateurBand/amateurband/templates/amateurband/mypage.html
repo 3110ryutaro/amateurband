@@ -1,10 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/styles.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/style_mypage.css'%}">
+{% block content%}
+<ul>
+    <li><a href="{% url 'main:article_list' %}">投稿一覧</a></li>
+    <li><a href="{% url 'main:message_list' %}">メッセージ</a></li>
+    <li><a href="{% url 'main:profile' %}">プロフィール設定</a></li>
+</ul>
+
+<h3>メッセージ</h3>
+<ul>
+    {% for article in article_list %}
+    <li>
+        {{ article.title }}
+    </li>
+    {% endfor %}
+</ul>
+
+<h3>投稿記事</h3>
+<ul>
+    {% for article in article_list %}
+    <li>
+        {{ article.title }}
+    </li>
+    {% endfor %}
+</ul>
+
+<h2>メンバーを探す</h2>
+<div class="menber_search">
+    <a href="" class="btn boshu_btn">募集する</a>
+    <a href="" class="btn kanyu_btn">加入する</a>
+</div>
+
+{% endblock %}

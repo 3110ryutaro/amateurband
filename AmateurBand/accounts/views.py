@@ -37,7 +37,9 @@ class LoginView(View):
         login_user = form.get_login_user()
         auth_login(request, login_user)
 
-        return redirect(reverse('main:index'))
+        user_id = login_user.user_id
+
+        return redirect(reverse('main:mypage', kwargs={'user_id': user_id}))
 
 
 class LogoutView(LoginRequiredMixin, View):
