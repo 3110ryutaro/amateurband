@@ -101,9 +101,9 @@ class LoginForm(forms.Form):
         try:
             requesting_user = AmateurUser.objects.get(username=username)
         except ObjectDoesNotExist:
-            raise forms.ValidationError('Input the correct username. ')
+            raise forms.ValidationError('ユーザー名が間違っています ')
         if not requesting_user.check_password(password):
-            raise forms.ValidationError('Input the correct password.')
+            raise forms.ValidationError('パスワードが間違っています')
         self.user_request_to_login = requesting_user
 
     def get_login_user(self):

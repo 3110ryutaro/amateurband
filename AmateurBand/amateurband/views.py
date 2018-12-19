@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views import View
-from .forms import ArticleForm
+from .forms import ArticleForm, ArticleUpdateForm
+from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
+from django import forms
 from .models import Article
-from django.views.generic import FormView
+from django.views.generic import FormView, UpdateView
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -15,7 +17,7 @@ class IndexView(View):
         article_list = Article.objects.all()
         context = {
             'article_list': article_list
-    }
+        }
         return render(request, 'amateurband/index.html', context)
 
 
@@ -43,7 +45,6 @@ class ArticleView(LoginRequiredMixin, FormView):
 
 class MyPageView(View):
     def get(self, request, **kwargs):
-
         user_id = kwargs['user_id']
         user = AmateurUser.objects.get(user_id=user_id)
         context = {
@@ -62,19 +63,32 @@ class ArticleListView(View):
         return render(request, 'amateurband/article_list.html', context)
 
 
-class ArticleEditView(View):
+class ArticleDetailView(View):
     def get(self, request, article_id):
         article = get_object_or_404(Article, pk=article_id)
-        form = ArticleForm(instance=article)
         context = {
-            'form': form
+            'article': article
+        }
+        return render(request, 'amateurband/article_detail.html', context)
+
+
+class ArticleEditView(View, FormMixin):
+
+    def get(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+        form = ArticleUpdateForm(instance=article)
+        context = {
+            'form': form,
+            'article': article,
         }
         return render(request, 'amateurband/article_edit.html', context)
 
-
-class ArticleUpdateView(View):
-    def get(self):
-        pass
+    def post(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+        form = ArticleUpdateForm(request.POST, article, user=request.user)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('main:article_list')
 
 
 class ArticleDeleteView(View):
@@ -90,4 +104,3 @@ class MessageView(View):
 class ProfileView(View):
     def get(self):
         pass
-

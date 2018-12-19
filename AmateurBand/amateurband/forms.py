@@ -22,3 +22,11 @@ class ArticleForm(forms.ModelForm):
             article_info.save()
         return article_info
 
+
+class ArticleUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['title', 'text']
+
+
+

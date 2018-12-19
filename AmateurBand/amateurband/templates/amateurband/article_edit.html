@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-{{ form }}
+<a href="{% url 'main:detail' article.id %}">戻る</a>
+<form action="{% url 'main:edit' article.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+<button type="submit" class="btn">保存</button>
+</form>
 {% endblock %}

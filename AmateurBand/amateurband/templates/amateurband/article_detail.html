@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+  <a href="{% url 'main:index' %}">ホームに戻る</a>
+</div>
+
+<h2>{{ article.title }}</h2>
+<div>
+  {{ article.text | linebreaks | urlize }}
+</div>
+<button><a class="btn" href="{% url 'main:edit' article.pk %}">編集</a></button>
+
+<form method="post" action="{% url 'main:delete' article.pk %}">{% csrf_token %}
+  <button class="btn" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
+</form>
+{% endblock %}

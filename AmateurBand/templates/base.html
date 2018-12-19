@@ -1,11 +1,11 @@
-{% load i18n static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'amateurband/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'amateurband/css/styles.css' %}">
-{% block extra_css %}{% endblock %}
+    {% block extra_css %}{% endblock %}
     <title>{% if request.path != '/'%}{% block title %}{% endblock %}{% endif %}AmateurBand</title>
 </head>
 <body>
@@ -24,11 +24,12 @@
         </ul>
     </nav>
 </header>
+
 <div class="container mt-3">
     {% block content %}{% endblock %}
 </div>
-<script src="{% static 'AmateurBandSite/js/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'AmateurBandSite/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'amateurband/js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'amateurband/js/bootstrap.bundle.min.js' %}"></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>
