@@ -16,7 +16,7 @@ class SignUpView(View):
             return render(request, 'accounts/signup.html', {'form': form})
         user_info_save = form.save(commit=True)
         auth_login(request, user_info_save)
-        return redirect('main:index')
+        return redirect('main:profile')
 
 
 class LoginView(View):

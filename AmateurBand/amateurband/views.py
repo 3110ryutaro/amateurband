@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views import View
-from .forms import ArticleForm, ArticleUpdateForm
+from .forms import ArticleForm, ArticleUpdateForm, RecruitmentForm, ProfileForm
 from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
 from django import forms
@@ -43,6 +43,11 @@ class ArticleView(LoginRequiredMixin, FormView):
             return render(request, 'amateurband/article.html', {'form': form})
 
 
+class ProfileView(View):
+    def get(self):
+        pass
+
+
 class MyPageView(View):
     def get(self, request, **kwargs):
         user_id = kwargs['user_id']
@@ -54,7 +59,7 @@ class MyPageView(View):
 
 
 class ArticleListView(View):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         user = request.user
         article_list = user.articles.all()
         context = {
@@ -101,6 +106,10 @@ class MessageView(View):
         pass
 
 
-class ProfileView(View):
-    def get(self):
-        pass
+class RecruitmentView(View):
+    def get(self, request, *args, **kwargs):
+        form = RecruitmentForm
+        context = {
+            'form': form
+        }
+        return render(request, 'amateurband/recruitment.html', context)

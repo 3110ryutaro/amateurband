@@ -1,4 +1,4 @@
-from .models import Article
+from .models import Article, Recruitment, Profile
 from django import forms
 
 
@@ -23,10 +23,24 @@ class ArticleForm(forms.ModelForm):
         return article_info
 
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('nickname', 'gender', 'instrument')
+
+
 class ArticleUpdateForm(forms.ModelForm):
     class Meta:
         model = Article
         fields = ['title', 'text']
+
+
+class RecruitmentForm(forms.ModelForm):
+    class Meta:
+        model = Recruitment
+        fields = ('is_public', 'title',
+                  'instrument', 'amateur_level',
+                  'age', 'comment')
 
 
 
