@@ -6,17 +6,26 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class SignUpView(View):
-    def get(self, request, *args, **kwargs):
-        form = SignUpForm
-        return render(request, 'accounts/signup.html', {'form': form})
+    def get(self, request, signup_id):
 
-    def post(self, request):
+        context = {
+            'form': SignUpForm
+        }
+        if signup_id == 1:
+            return render(request, 'accounts/recruit_signup.html', context)
+        elif signup_id == 2:
+            return render(request, 'accounts/entry_signup.html', context)
+
+    def post(self, request, signup_id):
         form = SignUpForm(request.POST)
         if not form.is_valid():
-            return render(request, 'accounts/signup.html', {'form': form})
+            return render(request, 'accounts/recruit_signup.html', {'form': form})
         user_info_save = form.save(commit=True)
         auth_login(request, user_info_save)
-        return redirect('main:profile')
+        if signup_id == 1:
+            return redirect('main:new_recruitment')
+        elif signup_id == 2:
+            return redirect('main:recruit_list')
 
 
 class LoginView(View):
@@ -37,9 +46,7 @@ class LoginView(View):
         login_user = form.get_login_user()
         auth_login(request, login_user)
 
-        user_id = login_user.user_id
-
-        return redirect(reverse('main:mypage', kwargs={'user_id': user_id}))
+        return redirect(reverse('main:index'))
 
 
 class LogoutView(LoginRequiredMixin, View):

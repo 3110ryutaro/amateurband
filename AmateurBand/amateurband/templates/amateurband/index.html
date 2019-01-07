@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<table>
-{% for article in article_list %}
-    <tr>
-        <th>{{article.title}}</th>
-        <td>{{article.text}}</td>
-    </tr>
-    {% endfor %}
-</table>
+
+<h2>メンバーを探す</h2>
+<div class="menber_search">
+    {% if user.is_authenticated %}
+    <a href="{% url 'main:new_recruitment' %}" class="btn boshu_btn">募集する</a>
+    <a href="{% url 'main:recruitment_list'%}" class="btn kanyu_btn">加入する</a>
+    {% else %}
+    <a href="{% url 'accounts:login' %}" class="btn boshu_btn">募集する</a>
+    <a href="{% url 'accounts:login' %}" class="btn kanyu_btn">加入する</a>
+    {% endif %}
+</div>
 {% endblock %}

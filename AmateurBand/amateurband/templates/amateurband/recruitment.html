@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="{% url 'main:recruitment' %}" method="post">
+<ul>
+    <li><a href="{% url 'main:recruitment_list' %}">募集記事一覧</a></li>
+    <li><a href="{% url 'main:mypage' %}">マイページ</a></li>
+</ul>
+<form action="{% url 'main:new_recruitment' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-success btn-lg btn-block">投稿する</button>

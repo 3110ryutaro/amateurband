@@ -14,8 +14,6 @@
     <nav>
         <ul>
             <li><a href="{% url 'main:index' %}">Home</a></li>
-            <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
-            <li><a href="{% url 'main:article'%}">記事を書く</a></li>
             {% if user.is_authenticated %}
             <li><a href="{% url 'accounts:logout' %}" class="logout">Logout</a></li>
             {% else %}

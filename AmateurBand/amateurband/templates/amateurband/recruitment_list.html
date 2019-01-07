@@ -1,8 +1,13 @@
 {% extends 'base.html'%}
 {% block content %}
+<div>
+    <ul>
+        <li><a href="{% url 'main:mypage' %}">マイページ</a></li>
+    </ul>
+</div>
 <ul>
-{% for article in article_list %}
-    <li><a href="{% url 'main:detail' article.id %}">{{ article.title }}</a></li>
+{% for recruitment in recruitment_list %}
+    <li><a href="{% url 'main:recruitment_detail' recruitment.id %}">{{ recruitment.title }}</a></li>
 {% endfor %}
 </ul>
 

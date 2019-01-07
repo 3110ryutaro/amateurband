@@ -16,4 +16,10 @@
             </div>
         </div>
        </div>
-    </form>{% endblock %}
+    </form>
+<h2>--新規登録--</h2>
+<div class="signup-btn">
+<a href="{% url 'accounts:signup' 1 %}" class="btn boshu_btn">募集する</a>
+<a href="{% url 'accounts:signup' 2 %}" class="btn kanyu_btn">加入する</a>
+</div>
+{% endblock %}

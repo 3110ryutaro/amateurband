@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if request.path == 'accounts/signup/1' %}
+<h2>仲間を集めるために募集しましょう</h2>
+{% elif request.path == 'accounts/signup/2' %}
+<h2>既存のバンドに加入しましょう。</h2>
+{% endif %}
  <form action="{% url 'accounts:signup' %}" method="post">
        <div class="col-md-6 offset-md-3">
         <div class="card">
