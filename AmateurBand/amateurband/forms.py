@@ -1,5 +1,24 @@
-from .models import Recruitment, RecruitmentComment, SendingMessage
+from .models import Recruitment, RecruitmentComment, SendingMessage, UserProfile
 from django import forms
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('image', 'age', 'gender', 'instrument', 'amateur_level', 'area')
+
+    def __init__(self, *args, **kwargs):
+        self._user = kwargs.pop('user')
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+    def save(self, commit=True):
+        profile_info = super(ProfileForm, self).save(commit=False)
+        profile_info.user = self._user
+        if commit:
+            profile_info.save()
+        return profile_info
 
 
 class RecruitmentForm(forms.ModelForm):
@@ -11,6 +30,8 @@ class RecruitmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self._user = kwargs.pop('user')
         super(RecruitmentForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
 
     def save(self, commit=True):
         article_info = super(RecruitmentForm, self).save(commit=False)
@@ -63,8 +84,9 @@ class SendingMessageForm(forms.ModelForm):
 
     def save(self, commit=True):
         message_info = super(SendingMessageForm, self).save(commit=False)
-        message_info.user = self._sending_user
+        message_info.sending_user = self._sending_user
         message_info.receive_user = self._receive_user
+
         if commit:
             message_info.save()
         return message_info

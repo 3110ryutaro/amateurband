@@ -12,13 +12,13 @@
 <div class="header-image-container" style="text-align: center;">
 <h2 style="letter-spacing: 4px; margin-top: 24px;">Welcome to AmateurBand</h2>
 <div class="image-box">
-<img src="{% static 'amateurband/image/band.jpg' %}" style="background-size: cover;"/>
+<img src="{% static 'amateurband/image/band.jpg' %}" style="background-size: cover; "/>
 </div>
 </div>
 {% endblock %}
 {% block content %}
 <div class="introduce">
-<h2 style="text-align: left; margin: 24px 0;">AmateurBandの使い方</h2>
+<h2 style="text-align: left; margin: 24px 0; border-bottom: 1px solid #ccc">AmateurBandの使い方</h2>
     <ul class="how_to_use" style="list-style: disc;">
         <li style="padding: 12px;">バンドを組んでみたいけど、楽器演奏をしたことがない初心者の方</li>
         <li style="padding: 12px;">個人で楽器を嗜んでいるが、バンド活動は未経験、もしくはブランクがある方</li>
@@ -26,19 +26,42 @@
         <li style="padding: 12px;">いちからの仲間探し</li>
     </ul>
     <p>etc...</p>
-    <h3>音楽を通じてあなただけの最高の仲間を見つけてみましょう。</h3>
+    <p>音楽を通じてあなただけの最高の仲間を見つけてみましょう。</p>
 
 </div>
-
-<p>メンバーを探す</p>
-</div>
-<div class="menber_search">
+<div class="member-search">
+<h2 style="border-bottom: 1px solid #ccc; padding-top: 24px;">メンバーを探す</h2>
+<div class="menber-button" style="padding: 40px; text-align: center;">
     {% if user.is_authenticated %}
-    <a href="{% url 'main:new_recruitment' %}" class="btn boshu_btn">募集する</a>
-    <a href="{% url 'main:recruitment_list'%}" class="btn kanyu_btn">加入する</a>
+    <p>
+        バンドメンバーを一から募集したい。足りないパートのメンバーを募集したい。
+        というかたは、こちらからどうぞ。
+    </p>
+    <a href="{% url 'main:new_recruitment' %}" class="btn boshu_btn"
+    style="background-color: navy; border-radius: 6px; color: #fff;
+padding: 12px; width: 120px;">募集する</a>
+    <p style="margin-top: 20px">
+        既存のバンドに加入したいという方はこちらからどうぞ。
+    </p>
+    <a href="{% url 'main:home'%}" class="btn kanyu_btn"
+    style="background-color: green; border-radius: 6px; color: #fff;
+padding: 12px; width: 120px;">加入する</a>
     {% else %}
-    <a href="{% url 'accounts:login' %}" class="btn boshu_btn">募集する</a>
-    <a href="{% url 'accounts:login' %}" class="btn kanyu_btn">加入する</a>
+    <p>
+        バンドメンバーを一から募集したい。足りないパートのメンバーを募集したい。
+        という方は、こちらからどうぞ。
+    </p>
+    <a href="{% url 'accounts:login' 1 %}" class="btn boshu-btn"
+    style="background-color: navy; border-radius: 6px; color: #fff;
+padding: 12px; width: 120px;">募集する</a>
+    <p style="margin-top: 20px">
+        既存のバンドに加入したいという方はこちらからどうぞ。
+    </p>
+    <a href="{% url 'accounts:login' 2 %}" class="btn kanyu-btn"
+    style="background-color: green; border-radius: 6px; color: #fff;
+padding: 12px; width: 120px;">加入する</a>
     {% endif %}
+</div>
+
 </div>
 {% endblock %}

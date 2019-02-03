@@ -1,10 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="col-md-6 offset-md-3">
+<table class="table table-bordered table-responsive-sm">
+    <thead>
+    <tr>
+        <th scope="col">ユーザー名</th>
+        <td>{{ user.username }}</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row">プロフィール画像</th>
+        <td style="text-align: center;">{% if user.profile.image %}
+            <a href="{{user.profile.image.url}}"><img src="{{ user.profile.image.medium.url }}"></a>
+            {% else %}
+            <img src="{% static 'amateurband/image/no_image.jpg' %}" style="background-size: cover; height: 120px; width: 120px;"/>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">年齢</th>
+        {% if user.profile.age == 1 %}
+        <td>10～20歳</td>0
+        {% elif user.profile.age == 2 %}
+        <td>20～30歳</td>
+        {% elif user.profile.age == 3 %}
+        <td>30～40歳</td>
+        {% elif user.profile.age == 4 %}
+        <td>40～50歳</td>
+        {% elif user.profile.age == 5 %}
+        <td>50～60歳</td>
+        {% elif user.profile.age == 6 %}
+        <td>60～70歳</td>
+        {% else %}
+        <td>None</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <th scope="row">性別</th>
+        {% if user.profile.gender == 1 %}
+        <td>男性</td>
+        {% elif user.profile.gender == 2 %}
+        <td>女性</td>
+        {% else %}
+        <td>None</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <th scope="row">担当楽器</th>
+        <td>{{ user.profile.instrument }}</td>
+    </tr>
+    <tr>
+        <th scope="row">演奏レベル</th>
+        <td>{{ user.profile.amateur_level }}</td>
+    </tr>
+    <tr>
+        <th scope="row">活動地域</th>
+        <td>{{ user.profile.area }}</td>
+    </tr>
+    </tbody>
+</table>
+{% if not user.profile %}
+    <button class="btn btn-success btn-sm"><a href="{% url 'main:config_profile' %}" style="color: #fff; padding: 8px;">編集</a></button>
+{% else %}
+<button class="btn btn-success btn-sm"><a href="{% url 'main:edit_profile' %}" style="color: #fff; padding: 8px;">編集</a></button>
+{% endif %}
+</div>
+{% endblock %}

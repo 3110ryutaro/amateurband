@@ -1,38 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
-<form action="{% url 'accounts:login' %}" method="POST">
-       <div class="col-md-6 offset-md-3">
+<div class="col-md-6 offset-md-3">
+    {% if login_id == 1 %}
+    <p style="background-color: navy; padding: 18px; border-radius: 8px; color: #fff; border: 3px solid #ccc;">
+        バンドを募集する管理者となり、バンドメンバーを募集しましょう。
+    </p>
+    {% endif %}
+    {% if login_id == 2 %}
+    <p style="background-color: green; padding: 18px; border-radius: 8px; color: #fff; border: 3px solid #ccc;">
+        あなたに合う募集記事を見つけましょう。募集者とコンタクトをとり、バンドに参加しましょう。
+    </p>
+    {% endif %}
+    <form action="{% url 'accounts:login' login_id %}" method="POST">
+
         <div class="card">
             <div class="card-body">
                 {{ loginform.non_field_errors }}
                 {% for field in loginform %}
-                    {{ field }}
-                    {{ field.errors }}
-                    <hr>
+                {{ field }}
+                {{ field.errors }}
+                <hr>
                 {% endfor %}
-                <button type="submit" class="btn btn-success btn-lg btn-block" >ログイン</button>
-                <input type="hidden" name="next" value="{{ next }}" />
+                <button type="submit" class="btn btn-success btn-lg btn-block">ログイン</button>
+                <input type="hidden" name="next" value="{{ next }}"/>
                 {% csrf_token %}
             </div>
         </div>
-       </div>
-    </form>
+</div>
+</form>
 <h2 style="text-align:center; margin-top: 30px;">新規登録の方はこちら</h2>
 <form action="{% url 'accounts:signup' %}" method="post">
-       <div class="col-md-6 offset-md-3">
+    <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-body">
                 {{ signupform.non_field_errors }}
                 {% for field in signupform %}
-                    {{ field }}
-                    {{ field.errors }}
-                    <hr>
+                {{ field }}
+                {{ field.errors }}
+                <hr>
                 {% endfor %}
-                <button type="submit" class="btn btn-success btn-lg btn-block" >新規登録</button>
-                <input type="hidden" name="next" value="{{ next }}" />
+                <button type="submit" class="btn btn-success btn-lg btn-block">新規登録</button>
+                <input type="hidden" name="next" value="{{ next }}"/>
                 {% csrf_token %}
             </div>
         </div>
-       </div>
-    </form>
-{{% endblock %}
+    </div>
+</form>
+{% endblock %}

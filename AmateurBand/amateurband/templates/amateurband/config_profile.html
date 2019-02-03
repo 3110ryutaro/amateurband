@@ -1,5 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>{{user.username}}のプロフィールです</h2>
-{{ form.as_p }}
+<p style="background-color: #990000; padding: 18px; border-radius: 8px; color: #fff; border: 3px solid #ccc;">
+    プロフィールを設定することで、募集記事を検索する際に、「かんたん検索」
+を利用することができます。クリックすることで、設定したプロフィールに近い
+募集記事を一覧に表示することができますので、ご活用ください。</p>
+
+<h2 style="border-bottom: 1px solid #ccc; margin: 28px; padding: 12px;">{{user.username}}プロフィール</h2>
+<form action="" method="POST" enctype="multipart/form-data">
+       <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body">
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    {{ field.label }}
+                <p class="card-text">{{ field }}</p>
+                    {{ field.errors }}
+                    <hr>
+                {% endfor %}
+                <button type="submit" class="btn btn-success btn-lg btn-block" >設定する</button>
+                <input type="hidden" name="next" value="{{ next }}" />
+                {% csrf_token %}
+            </div>
+        </div>
+       </div>
+    </form>
+
 {% endblock %}

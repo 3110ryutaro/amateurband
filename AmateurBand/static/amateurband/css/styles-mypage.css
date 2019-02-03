@@ -1,0 +1,21 @@
+body {
+background-color: #003333
+}
+h3 {
+color: #fff;
+}
+ul li {
+color: #fff;
+}
+.mypage-nav li {
+display: inline-block;
+}
+.mypage-nav li a{
+color: #fff;
+}
+.mypage-nav {
+background-color: #0000CD;
+height: 50px;
+margin-bottom: 30px;
+}
+

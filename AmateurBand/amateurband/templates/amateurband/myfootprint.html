@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 36px;">
+    {{ request.user }}さんのページに訪れた人の一覧
+</h3>
+{% if not footprint_users %}
+<p>※誰も訪れていません</p>
+{% endif %}
+<div class="col-md-6 offset-md-3">
+    <table class="table table-bordered table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col">ユーザー名</th>
+            <th scope="col">担当楽器</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for footprint_user in footprint_users %}
+        <tr>
+
+            <td>
+                <a href="{% url 'main:user_detail' footprint_user.user.username %}">
+                    {{ footprint_user.user.username }}
+                </a>
+            </td>
+            <td>
+                {{ footprint_user.user.profile.instrument }}
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+        {% endblock %}

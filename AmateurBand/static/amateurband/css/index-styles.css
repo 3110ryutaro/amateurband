@@ -1,3 +1,13 @@
 .how_to_use li {
 padding: 24px;
 }
+.member-button btn {
+border-radius: 8px;
+}
+
+.boshu-btn {
+background-color: navy;
+}
+.kanyu-btn {
+background-color: yellow;
+}

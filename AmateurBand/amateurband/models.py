@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-
+from stdimage.models import StdImageField
 AmateurUser = get_user_model()
 
 AGE_CHOICES = (
@@ -11,6 +11,10 @@ AGE_CHOICES = (
         (5, '50～60歳'),
         (6, '60～70歳'),
     )
+GENDER_CHOICES = (
+    (1, '男性'),
+    (2, '女性'),
+)
 INSTRUMENT_CHOICES = (
         ('ヴォーカル', 'ヴォーカル'),
         ('ギター', 'ギター'),
@@ -19,6 +23,46 @@ INSTRUMENT_CHOICES = (
         ('キーボード', 'キーボード'),
         ('その他', 'その他'),
     )
+LEVEL_CHOICES = (
+    ('初心者', '初心者'),
+    ('経験者', '経験者'),
+)
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(AmateurUser,
+                                related_name='profile',
+                                on_delete=models.CASCADE)
+    image = StdImageField(upload_to='amateur_image/', blank=True, null=True, variations={
+        'large': (600, 400),
+        'thumbnail': (120, 120, True),
+        'medium': (300, 200),
+    })
+    gender = models.IntegerField(verbose_name='性別',
+                                 choices=GENDER_CHOICES,
+                                 null=True,
+                                 blank=True)
+    age = models.IntegerField(verbose_name='年齢',
+                              choices=AGE_CHOICES,
+                              blank=True, null=True)
+    instrument = models.CharField(max_length=10,
+                                  verbose_name='パート楽器',
+                                  choices=INSTRUMENT_CHOICES,
+                                  blank=True, null=True)
+    amateur_level = models.CharField(max_length=10,
+                                     verbose_name='初心者？経験者？',
+                                     choices=LEVEL_CHOICES,
+                                     blank=True, null=True)
+    area = models.CharField(verbose_name='活動地域',
+                            max_length=100,
+                            blank=True, null=True)
+
+
+class Footprint(models.Model):
+    user = models.OneToOneField(AmateurUser, on_delete=models.CASCADE)
+    footprint_user = models.ManyToManyField(AmateurUser,
+                                            blank=True,
+                                            related_name='footprints_user')
 
 
 class Recruitment(models.Model):
@@ -35,7 +79,7 @@ class Recruitment(models.Model):
     age = models.IntegerField(verbose_name='年齢制限',
                               choices=AGE_CHOICES,
                               blank=True, null=True)
-    area = models.CharField(verbose_name='活動地域', max_length=100, default='東京都')
+    area = models.CharField(verbose_name='活動地域', max_length=100)
     comment = models.TextField(verbose_name='コメント')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -57,12 +101,12 @@ class RecruitmentComment(models.Model):
 
 
 class SendingMessage(models.Model):
-    user = models.ForeignKey(AmateurUser,
-                             related_name='sending_messages',
-                             on_delete=models.CASCADE)
+    sending_user = models.ForeignKey(AmateurUser,
+                                     related_name='sending_messages',
+                                     on_delete=models.CASCADE)
     receive_user = models.ForeignKey(AmateurUser,
-                                     related_name='receive_user',
-                                     on_delete=models.PROTECT)
+                                     related_name='to_user',
+                                     on_delete=models.CASCADE)
     subject = models.CharField(verbose_name='件名',
                                max_length=150)
     text = models.TextField(verbose_name='本文')
@@ -75,10 +119,11 @@ class ReceiveMessage(models.Model):
                              related_name='receive_messages',
                              on_delete=models.CASCADE)
     sending_user = models.ForeignKey(AmateurUser,
-                                     related_name='sending_user',
-                                     on_delete=models.PROTECT)
+                                     related_name='message_route_user',
+                                     on_delete=models.CASCADE)
     subject = models.CharField(verbose_name='件名',
                                max_length=150)
     text = models.TextField(verbose_name='本文')
+    unread = models.BooleanField(default=False)
     sending_date = models.DateTimeField(auto_now_add=True)
     receiving_date = models.DateTimeField(auto_now_add=True)

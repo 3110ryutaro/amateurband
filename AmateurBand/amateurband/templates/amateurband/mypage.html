@@ -1,35 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/style-mypage.css'%}">{% endblock %}
-{% block header %}
-<ul class="mypage-nav">
-    <li><a href="{% url 'main:home' %}">募集記事一覧</a></li>
-    <li><a href="{% url 'main:config_profile' %}">プロフィール設定</a></li>
-</ul>
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-mypage.css'%}">
 {% endblock %}
 {% block content %}
-
+<div class="col-md-6 offset-md-3">
 <div class="recruitment_list">
-    <h3>投稿した募集記事</h3>
+    <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">投稿した募集記事</h3>
     <ul>
-    {% if not recruitments %}
+        {% if not recruitments %}
         <p style="color: #fff;">投稿した記事はありません。</p>
-    {% endif %}
-    {% for recruit in recruitments %}
+        {% endif %}
+        {% for recruit in recruitments %}
         <li><a href="{% url 'main:recruitment_detail' recruit.id %}">{{ recruit.title }}</a></li>
-    {% endfor %}
+        {% endfor %}
     </ul>
 </div>
-<div class="message_list">
-    <h3>メッセージ</h3>
-    <ul>
-    {% if not receive_messages %}
-        <p style="color: #fff;">メッセージはありません。</p>
+<div class="message_list" style="margin-top: 28px;">
+    <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">未読メッセージ</h3>
+
+    {% if receive_messages.count == 0 %}
+    <p style="color: #fff;">未読メッセージはありません。</p>
     {% endif %}
+    <ul>
     {% for message in receive_messages %}
-        <li><a href="{% url 'main:message_detail' message.id %}">{{ message.subject }}</a></li>
-    {% endfor %}
+        {% if not message.unread%}
+        <li><a href="{% url 'main:message_detail' message.id %}">{{message.subject}}</a></li>
+        {% endif %}
+        {% endfor %}
     </ul>
+
 </div>
+</div>
+
 {% endblock %}

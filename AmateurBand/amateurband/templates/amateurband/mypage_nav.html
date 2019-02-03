@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+
+<ul class="mypage_nav" style="padding: 12px 32px; margin-bottom: 32px; background-color: blue;">
+    <li style="display: inline-block; margin-right: 16px;">
+        <a href="{% url 'main:new_recruitment' %}">募集記事を書く</a>
+    </li>
+    <li style="display: inline-block; margin-right: 16px;">
+        <a>メッセージ一覧</a>
+    </li>
+    <li style="display: inline-block; margin-right: 16px;">
+        <a>募集記事一覧</a>
+    </li>
+    <li style="display: inline-block; margin-right: 16px;">
+        <a href="{% url 'main:edit_profile' %}">プロフィール設定</a>
+    </li>
+</ul>

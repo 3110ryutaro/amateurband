@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<div class="col-md-6 offset-md-3">
+{% if not recruitment_list%}
+    <p>投稿した記事はありません</p>
+{% endif%}
+{% for recruitment in recruitment_list %}
+
+<a href="{% url 'main:recruitment_detail' recruitment.id %}" style="hover text_decoration: none;">
+    <table class="table table-bordered table-responsive-sm" style="margin-top: 0;">
+        <tbody>
+        <tr>
+            <td><h4 style="border-bottom: 1px solid #ccc;">{{ recruitment.title }}</h4>
+                <p style="color: black;">{{ recruitment.comment }}</p></td>
+        </tr>
+        </tbody>
+    </table>
+</a>
+    <table class="table table-bordered table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col">募集年齢</th>
+            <th scope="col">募集パート</th>
+            <th scope="col">募集レベル</th>
+            <th scope="col">活動地域</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {% if recruitment.age == 1 %}
+            <td>10～20歳</td>
+            {% elif recruitment.age == 2 %}
+            <td>20～30歳</td>
+            {% elif recruitment.age == 3 %}
+            <td>30～40歳</td>
+            {% elif recruitment.age == 4 %}
+            <td>40～50歳</td>
+            {% elif recruitment.age == 5 %}
+            <td>50～60歳</td>
+            {% elif recruitment.age == 6 %}
+            <td>60～70歳</td>
+            {% endif %}
+            <td>{{ recruitment.instrument }}</td>
+            {% if recruitment.amateur_level %}
+            <td>初心者歓迎</td>
+            {% else %}
+            <td>経験者歓迎</td>
+            {% endif %}
+            <td>{{ recruitment.area }}</td>
+        </tr>
+        <tr></tr>
+        </tbody>
+    </table>
+
+
+
+<div style="height:2px; background-color: #ccc; margin: 24px 0;"></div>
+
+{% endfor %}
+</div>
+{% endblock %}

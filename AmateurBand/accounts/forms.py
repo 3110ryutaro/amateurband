@@ -25,18 +25,17 @@ class SignUpForm(forms.ModelForm):
     def clean_username(self):
         """usernameのバリデーション"""
         username = self.cleaned_data['username']
+        if AmateurUser.objects.filter(username=username):
+            raise forms.ValidationError('この名前のユーザーは既に存在しています。')
         # usernameは3文字以上にならねばエラー表示。
         if len(username) < 3:
-            raise forms.ValidationError('Username must be longer than 3')
+            raise forms.ValidationError('3文字以上のユーザー名にしてください。')
         # usernameがアルファベットを含んでなければエラー表示。
         if not username.isalpha():
-            raise forms.ValidationError('Username must contain alphabets')
+            raise forms.ValidationError('半角アルファベットを用いてください')
         # usernameが数字だけであればエラー表示。
         if username.isnumeric():
-            raise forms.ValidationError('Username cannot be only numbers')
-        # usernameは数字のみではならない。
-        if username.isnumeric():
-            raise forms.ValidationError('Username cannot contain only numbers')
+            raise forms.ValidationError('数字と半角アルファベットを用いてください')
         return username
 
     def clean_password(self):

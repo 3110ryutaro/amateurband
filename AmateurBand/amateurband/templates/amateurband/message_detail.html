@@ -3,11 +3,32 @@
 {% endblock %}
 {% block content %}
 <a href="{% url 'main:mypage' %}">戻る</a>
-<div class="message-container">
-<h3>{{ message.subject }}</h3>
-<p>{{ message.text }}</p>
+<div class="col-md-6 offset-md-3">
+    <div class="message-container">
+        <table class="table table-bordered table-responsive-sm">
+            <tbody>
+            <tr>
+                <th scope="row">送信元</th>
+                <td><h4>{{message.sending_user.username}}</h4></td>
+            </tr>
+            　
+            <tr>
+                <th scope="row">件名</th>
+                <td>{{ message.subject }}</td>
+            </tr>
+            　
+            <tr>
+                <th scope="row">本文</th>
+                <td>{{ message.text|urlize|linebreaksbr }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="reply_button">
+            <button class="btn btn-success btn-sm"><a
+                    href="{% url 'main:message_reply' message.sending_user.username %}"
+                    style="color: #fff; padding: 8px;">返信</a></button>
+        </div>
+    </div>
 </div>
-<div class="reply_button">
-    <a href="">返信</a>
-</div>
+
 {% endblock %}

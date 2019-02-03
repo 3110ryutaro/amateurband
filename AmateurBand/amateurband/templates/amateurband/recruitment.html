@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-<ul>
-    <li><a href="{% url 'main:recruitment_list' %}">募集記事一覧</a></li>
-    <li><a href="{% url 'main:mypage' %}">マイページ</a></li>
-</ul>
-<form action="{% url 'main:new_recruitment' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success btn-lg btn-block" style="margin-bottom: 30px;">投稿する</button>
-</form>
+<form action="{% url 'main:new_recruitment' %}" method="POST">
+       <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body">
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    {{ field.label }}
+                    {{ field }}
+                    {{ field.errors }}
+                    <hr>
+                {% endfor %}
+                <button type="submit" class="btn btn-success btn-lg btn-block" >投稿する</button>
+                <input type="hidden" name="next" value="{{ next }}" />
+                {% csrf_token %}
+            </div>
+        </div>
+       </div>
+    </form>
 {% endblock %}

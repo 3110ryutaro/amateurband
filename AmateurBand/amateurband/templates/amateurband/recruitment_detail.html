@@ -1,25 +1,60 @@
 {% extends 'base.html' %}
 {% block content %}
-<div>
-  <a href="{% url 'main:mypage' %}">マイページ</a>
-  <a href="{% url 'main:home' %}">ホームに戻る</a>
-</div>
-
-<h2>{{ recruitment.title }}</h2>
+<h3 style="margin-top: 36px; border-bottom: 1px solid #ccc; border-left:6px solid red; padding: 8px 12px;">
+  {{ recruitment.title }}
+</h3>
 <div>
   {{ recruitment.comment | linebreaks | urlize }}
 </div>
-<ul>
+<div style="border-top: 3px solid #ccc;">
 {% for comment in comments %}
-  <li><h3>{{ comment.name }}</h3>
-  <p>{{ comment.text }}</p></li>
+  <h3>{{ comment.name }}</h3>
+  <p>{{ comment.text|linebreaksbr|urlize }}</p>
+  <div style="height: 1px; background-color: #ccc;"></div>
 {% endfor %}
-</ul>
-{% if not request.user.user_id == recruitment.user.user_id %}
-<a href="{% url 'main:new_comment' recruitment.id %}" style="margin: 20px 0;">コメントを書く</a>
-<a href="{% url 'main:message' recruitment.id %}">メッセージを送る</a>
-{% else %}
-<button><a href="{% url 'main:edit_recruitment' recruitment.id %}">編集</a></button>
-{% endif %}
+</div>
+<table class="table table-bordered table-responsive-sm">
+        <thead>
+        <tr>
+            <th scope="col">募集年齢</th>
+            <th scope="col">募集パート</th>
+            <th scope="col">募集レベル</th>
+            <th scope="col">活動地域</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {% if recruitment.age == 1 %}
+            <td>10～20歳</td>
+            {% elif recruitment.age == 2 %}
+            <td>20～30歳</td>
+            {% elif recruitment.age == 3 %}
+            <td>30～40歳</td>
+            {% elif recruitment.age == 4 %}
+            <td>40～50歳</td>
+            {% elif recruitment.age == 5 %}
+            <td>50～60歳</td>
+            {% elif recruitment.age == 6 %}
+            <td>60～70歳</td>
+            {% endif %}
+            <td>{{ recruitment.instrument }}</td>
+            {% if recruitment.amateur_level %}
+            <td>初心者歓迎</td>
+            {% else %}
+            <td>経験者歓迎</td>
+            {% endif %}
+            <td>{{ recruitment.area }}</td>
+        </tr>
+        <tr></tr>
+        </tbody>
+    </table>
 
+<div class="comment_message_btn" style="margin-top: 42px;">
+{% if not request.user.user_id == recruitment.user.user_id %}
+<button type="button" class="btn btn-primary" style="margin-right: 20px;"><a href="{% url 'main:new_comment' recruitment.id %}" style="color: #fff">コメントを書く</a></button>
+<button type="button" class="btn btn-success"><a href="{% url 'main:message' recruitment.user.username %}" style="color: #fff;">メッセージを送る</a></button>
+{% else %}
+<button><a href="{% url 'main:edit_recruitment' recruitment.id %}">募集記事を編集する</a></button>
+{% endif %}
+</div>
 {% endblock %}

@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-mypage.css'%}">
+{% endblock %}
+{% block content %}
+ <div class="col-md-6 offset-md-3">
+{% for message in receive_messages %}
+    <table class="table table-bordered table-responsive-sm" style="margin-top: 0;">
+        <tbody>
+        <tr>
+            <td>
+                <a href="{% url 'main:user_detail' message.sending_user.username%}">
+                <img src="{{ message.sending_user.profile.image.thumbnail.url }}">
+                </a>
+            </td>
+            <td>
+                <h5 style="color: #fff;">
+                    <a href="{% url 'main:message_detail' message.id %}">
+                        {{ message.subject }}
+                    </a>
+                </h5>
+                <p style="color: #fff;">{{ message.text|linebreaksbr|urlize|truncatechars_html:30 }}</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {% endfor %}
+ </div>
+{% endblock %}

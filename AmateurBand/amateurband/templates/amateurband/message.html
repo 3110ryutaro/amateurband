@@ -1,12 +1,15 @@
 {% extends 'base.html'%}
 {% block header %}
+<ul>
+    <li><a href="{% url 'main:mypage'%}">マイページ</a></li>
+</ul>
 {% endblock %}
 {% block content %}
+<h4 style="border-bottom: 1px solid #ccc; margin: 28px 0; padding: 4px 16px;">{{receive_user.username }}へメッセージを送ります</h4>
 <form action="" method="POST">
        <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-body">
-                <h4>{{receive_user.username }}へメッセージを送ります</h4>
                 {{ form.non_field_errors }}
                 {% for field in form %}
                     {{ field }}

@@ -1,0 +1,52 @@
+body {
+box-sizing: border-box;
+}
+header {
+color: #fff;
+background-color: black;
+padding: 16px;
+margin: 0;
+}
+
+header h1 {
+margin: 0;
+padding: 0;
+letter-spacing: 8px;
+display: inline-block;
+}
+
+header h1 a {
+color: #fff;
+}
+
+
+header h1 a:hover {
+text-decoration: none;
+color: red;
+}
+
+a:hover {
+text-decoration: none;
+opacity: 0.5;
+}
+
+header ul {
+float: right;
+line-height: 20px;
+}
+
+.amateur-nav {
+list-style: none;
+}
+
+.amateur-nav li {
+display: inline-block;
+padding: 12px;
+}
+
+.amateur-nav li a:hover{
+text-decoration: none;
+color: #fff;
+}
+
+
