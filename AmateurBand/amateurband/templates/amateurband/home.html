@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<a href="{% url 'main:new_recruitment'%}">募集記事を書く</a>
+<div class="search_form" style="margin-bottom: 30px;">
+<form action="" method="get">
+    {{ form }}
+    <button type="submit">検索</button>
+</form>
+</div>
+<div class="recruitment_container">
+    <ul>
+    {% for recruitment in recruitments %}
+        <li><a href="{% url 'main:recruitment_detail' recruitment.id %}">{{ recruitment.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

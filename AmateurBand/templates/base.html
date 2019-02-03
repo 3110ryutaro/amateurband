@@ -4,25 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'amateurband/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'amateurband/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'amateurband/css/styles_base.css' %}">
     {% block extra_css %}{% endblock %}
     <title>{% if request.path != '/'%}{% block title %}{% endblock %}{% endif %}AmateurBand</title>
 </head>
 <body>
 <header>
-    <h1>AmateurBand</h1>
-    <nav>
-        <ul>
-            <li><a href="{% url 'main:index' %}">Home</a></li>
+    <h1><a href="main:index">AmateurBand</a></h1>
+        <ul class="amateur-nav">
             {% if user.is_authenticated %}
             <li><a href="{% url 'accounts:logout' %}" class="logout">Logout</a></li>
             {% else %}
+            <li><a href="{% url 'accounts:signup'%}">新規登録</a></li>
             <li><a href="{% url 'accounts:login' %}" class="login">Login</a></li>
             {% endif %}
         </ul>
-    </nav>
 </header>
-
+{% if user.is_authenticated %}
+<div class="login-nav">
+    {% block header %}{% endblock %}
+</div>
+{% endif %}
+{%block header_image %}{% endblock %}
 <div class="container mt-3">
     {% block content %}{% endblock %}
 </div>

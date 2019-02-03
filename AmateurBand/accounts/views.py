@@ -6,34 +6,31 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class SignUpView(View):
-    def get(self, request, signup_id):
+    def get(self, request):
 
         context = {
-            'form': SignUpForm
+            'form': SignUpForm()
         }
-        if signup_id == 1:
-            return render(request, 'accounts/recruit_signup.html', context)
-        elif signup_id == 2:
-            return render(request, 'accounts/entry_signup.html', context)
+        return render(request, 'accounts/signup.html', context)
 
-    def post(self, request, signup_id):
+    def post(self, request):
         form = SignUpForm(request.POST)
         if not form.is_valid():
             return render(request, 'accounts/recruit_signup.html', {'form': form})
         user_info_save = form.save(commit=True)
         auth_login(request, user_info_save)
-        if signup_id == 1:
-            return redirect('main:new_recruitment')
-        elif signup_id == 2:
-            return redirect('main:recruit_list')
+
+        return redirect('main:home')
 
 
 class LoginView(View):
     """ログインページ"""
     def get(self, request, *args, **kwargs):
-        form = LoginForm
+        signupform = SignUpForm
+        loginform = LoginForm
         context = {
-            'form': form
+            'signupform': signupform,
+            'loginform': loginform,
         }
         return render(request, 'accounts/login.html', context)
 

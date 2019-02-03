@@ -1,18 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles_mypage.css'%}">{% endblock %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/style-mypage.css'%}">{% endblock %}
+{% block header %}
+<ul class="mypage-nav">
+    <li><a href="{% url 'main:home' %}">募集記事一覧</a></li>
+    <li><a href="{% url 'main:config_profile' %}">プロフィール設定</a></li>
+</ul>
+{% endblock %}
 {% block content %}
 
 <div class="recruitment_list">
     <h3>投稿した募集記事</h3>
     <ul>
+    {% if not recruitments %}
+        <p style="color: #fff;">投稿した記事はありません。</p>
+    {% endif %}
     {% for recruit in recruitments %}
-        <li>{{ recruit.title }}</li>
+        <li><a href="{% url 'main:recruitment_detail' recruit.id %}">{{ recruit.title }}</a></li>
     {% endfor %}
     </ul>
 </div>
 <div class="message_list">
     <h3>メッセージ</h3>
+    <ul>
+    {% if not receive_messages %}
+        <p style="color: #fff;">メッセージはありません。</p>
+    {% endif %}
+    {% for message in receive_messages %}
+        <li><a href="{% url 'main:message_detail' message.id %}">{{ message.subject }}</a></li>
+    {% endfor %}
+    </ul>
 </div>
 {% endblock %}

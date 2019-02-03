@@ -7,6 +7,6 @@
 <form action="{% url 'main:new_recruitment' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-success btn-lg btn-block">投稿する</button>
+    <button type="submit" class="btn btn-success btn-lg btn-block" style="margin-bottom: 30px;">投稿する</button>
 </form>
 {% endblock %}

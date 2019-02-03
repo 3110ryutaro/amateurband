@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<a href="{% url 'main:detail' article.id %}">戻る</a>
-<form action="{% url 'main:edit' article.id %}" method="post">
+<a href="{% url 'main:recruitment_detail' recruitment.id %}">戻る</a>
+<form action="{% url 'main:edit_recruitment' recruitment.id %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 <button type="submit" class="btn">保存</button>
 </form>
+<form action="{% url 'main:recruitment_delete' recruitment.id %}" method="post">
+  {% csrf_token %}
+  <button type="submit" onclick="return confirm('削除してもよろしいですか？')">削除</button>
+</form>
+
 {% endblock %}

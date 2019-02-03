@@ -1,12 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
 <div>
-  <a href="{% url 'main:index' %}">ホームに戻る</a>
+  <a href="{% url 'main:mypage' %}">マイページ</a>
+  <a href="{% url 'main:home' %}">ホームに戻る</a>
 </div>
 
 <h2>{{ recruitment.title }}</h2>
 <div>
   {{ recruitment.comment | linebreaks | urlize }}
 </div>
-<button><a>メッセージを送る</a></button>
+<ul>
+{% for comment in comments %}
+  <li><h3>{{ comment.name }}</h3>
+  <p>{{ comment.text }}</p></li>
+{% endfor %}
+</ul>
+{% if not request.user.user_id == recruitment.user.user_id %}
+<a href="{% url 'main:new_comment' recruitment.id %}" style="margin: 20px 0;">コメントを書く</a>
+<a href="{% url 'main:message' recruitment.id %}">メッセージを送る</a>
+{% else %}
+<button><a href="{% url 'main:edit_recruitment' recruitment.id %}">編集</a></button>
+{% endif %}
+
 {% endblock %}
