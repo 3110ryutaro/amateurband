@@ -6,7 +6,7 @@
 {% endif%}
 {% for recruitment in recruitment_list %}
 
-<a href="{% url 'main:recruitment_detail' recruitment.id %}" style="hover text_decoration: none;">
+<a href="{% url 'main:recruitment_detail' recruitment.user.username recruitment.id %}" style="hover text_decoration: none;">
     <table class="table table-bordered table-responsive-sm" style="margin-top: 0;">
         <tbody>
         <tr>
@@ -48,7 +48,6 @@
             {% endif %}
             <td>{{ recruitment.area }}</td>
         </tr>
-        <tr></tr>
         </tbody>
     </table>
 

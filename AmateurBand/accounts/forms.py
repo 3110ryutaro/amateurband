@@ -16,6 +16,7 @@ class SignUpForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
+        self.kind = kwargs.pop('kind')
         super().__init__(*args, **kwargs)
         self.fields['email'].required = True
         for field in self.fields.values():
@@ -55,6 +56,7 @@ class SignUpForm(forms.ModelForm):
     def save(self, commit=True):
         """passwordをハッシュ化してからユーザー情報の保存"""
         user_info = super(SignUpForm, self).save(commit=False)
+        user_info.kind = self.kind
         user_info.set_password(self.cleaned_data['password'])
 
         if commit:

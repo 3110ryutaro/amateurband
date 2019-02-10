@@ -12,6 +12,7 @@
         <tr>
             <th scope="col">ユーザー名</th>
             <th scope="col">担当楽器</th>
+            <th scope="col">属性</th>
         </tr>
         </thead>
         <tbody>
@@ -26,6 +27,12 @@
             <td>
                 {{ footprint_user.user.profile.instrument }}
             </td>
+                {% if footprint_user.user.kind == 1 %}
+                <td>募集者</td>
+                {% elif footprint_user.user.kind == 2 %}
+                <td>加入者</td>
+                {% endif %}
+
 
         </tr>
         {% endfor %}

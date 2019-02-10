@@ -2,15 +2,26 @@
 {% load static %}
 {% block content %}
 <div class="search_form" style="margin-bottom: 30px;">
+
+    {% if profile_none_user %}
+    <div style="border: 6px solid #ccc; padding: 12px;">
+    <p style="color: red;">※かんたん検索をご利用できません。</p>
+    <p style="font-size: 0.8rem">プロフィールの項目を全て記入していただくと、利用していただけます。</p>
+    </div>
+    <p style="margin-top: 12px;">↓↓↓キーワード検索をご利用ください。↓↓↓</p>
+    {% else %}
     <div style="display: inline-block; margin-right: 32px;">
     <form action="" method="get">
-        <input type="hidden" name="user_age" value="{{ request.user.profile.age }}">
-        <input type="hidden" name="user_instrument" value="{{ request.user.profile.instrument }}">
-        <input type="hidden" name="user_amateur_level" value="{{ request.user.profile.amateur_level }}">
-        <input type="hidden" name="user_area" value="{{ request.user.profile.area }}">
+        <input type="hidden" name="user_age" value="{{ request.user.profile.age}}">
+        <input type="hidden" name="user_gender" value="{{ request.user.profile.gender }}">
+        <input type="hidden" name="user_instrument" value="{{ request.user.profile.instrument}}">
+        <input type="hidden" name="user_amateur_level" value="{{ request.user.profile.amateur_level}}">
+        <input type="hidden" name="user_area" value="{{ request.user.profile.area}}">
         <button type="submit" class="btn btn-info btn-lg">かんたん検索</button>
     </form>
     </div>
+    {% endif %}
+
     <div style="display: inline-block">
     <form action="" method="get">
         {{ form }}
@@ -19,32 +30,34 @@
     </div>
 </div>
 <div class="col-md-6 offset-md-3">
+    {% if not recruitments %}
+    <p>※投稿記事がありません</p>
+    {% endif %}
 {% for recruitment in recruitments %}
-
+    {% if not recruitment.public %}
+<a href="{% url 'main:recruitment_detail' recruitment.user.username recruitment.id %}">
     <table class="table table-bordered table-responsive-sm" style="margin-top: 0;">
         <tbody>
             <td>
-                <a href="{% url 'main:user_detail' recruitment.user.username %}">
                     {% if not recruitment.user.profile.image %}
                     <img src="{% static 'amateurband/image/no_image.jpg' %}" style="background-size: cover; height: 120px; width: 120px;"/>
                     {% endif %}
                     <img src="{{ recruitment.user.profile.image.thumbnail.url }}">
-                </a>
             </td>
 
             <td>
-                <a href="{% url 'main:recruitment_detail' recruitment.id %}" style="hover text_decoration: none;">
                     <h5>{{ recruitment.title }}</h5>
                 <p style="color: black;">{{ recruitment.comment|truncatechars_html:40 }}</p>
-                </a>
             </td>
         </tr>
         </tbody>
     </table>
 </a>
+    {% if recruitment.recruitment_comment.admission%}
     <p>コメント{{ recruitment.recruitment_comment.all.count }}件</p>
+    {% endif %}
 <div style="height:2px; background-color: #ccc; margin: 24px 0;"></div>
-
+{% endif %}
 {% endfor %}
 </div>
 {% endblock %}

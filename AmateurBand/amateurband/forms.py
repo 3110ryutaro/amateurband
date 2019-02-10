@@ -24,8 +24,9 @@ class ProfileForm(forms.ModelForm):
 class RecruitmentForm(forms.ModelForm):
     class Meta:
         model = Recruitment
-        fields = ('title', 'instrument', 'amateur_level',
-                  'age', 'area', 'comment')
+        fields = ('public', 'title', 'age', 'gender',
+                  'instrument', 'amateur_level',
+                  'area', 'comment')
 
     def __init__(self, *args, **kwargs):
         self._user = kwargs.pop('user')

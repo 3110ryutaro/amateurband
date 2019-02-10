@@ -4,33 +4,116 @@
 <link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-mypage.css'%}">
 {% endblock %}
 {% block content %}
+{% if request.user.kind == 1 %}
 <div class="col-md-6 offset-md-3">
-<div class="recruitment_list">
-    <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">投稿した募集記事</h3>
-    <ul>
-        {% if not recruitments %}
-        <p style="color: #fff;">投稿した記事はありません。</p>
+    <div class="recruitment_list">
+        <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">投稿した募集記事</h3>
+        <ul>
+            {% if not recruitments %}
+            <p style="color: #fff;">投稿した記事はありません。</p>
+            {% endif %}
+            {% for recruit in recruitments %}
+            <li><a href="{% url 'main:recruitment_detail' request.user.username recruit.id %}">{{ recruit.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="message_list" style="margin-top: 28px;">
+        <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">未読メッセージ</h3>
+
+        <ul>
+            {% if receive_messages.count == 0 %}
+            <p style="color: #fff;">未読メッセージはありません。</p>
+            {% endif %}
+            {% for message in receive_messages %}
+            {% if not message.unread%}
+            <li><a href="{% url 'main:message_detail' message.id %}">{{message.subject}}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+
+    </div>
+    <div class="admission-comment">
+        <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">承諾待ちコメント</h3>
+
+        {% for recruitment in recruitments%}
+        {% for comment in recruitment.recruitment_comment.all %}
+        {% if not comment.admission%}
+        <div class="card" style="margin: 0 auto;">
+            <div class="card-body">
+                <a href="{% url 'main:user_detail' comment.name %}"
+                   style="font-size: 1.4rem; color: blue; font-weight: bold;">{{ comment.name }}</a>
+                <p class="hidden-print">{{ comment.text|linebreaksbr|truncatechars_html:25 }}</p>
+                <p id="aaa" class="hidden-print">続きを読む</p>
+                <p class="show-print" style="display:none;">{{ comment.text }}</p>
+                <div>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                        <button type="submit" class="btn btn-danger" style="display: inline;"
+                                onclick="return confirm('承諾しますか？')">承諾
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
         {% endif %}
-        {% for recruit in recruitments %}
-        <li><a href="{% url 'main:recruitment_detail' recruit.id %}">{{ recruit.title }}</a></li>
+        {% endfor%}
         {% endfor %}
-    </ul>
-</div>
-<div class="message_list" style="margin-top: 28px;">
-    <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">未読メッセージ</h3>
 
-    {% if receive_messages.count == 0 %}
-    <p style="color: #fff;">未読メッセージはありません。</p>
-    {% endif %}
-    <ul>
-    {% for message in receive_messages %}
-        {% if not message.unread%}
-        <li><a href="{% url 'main:message_detail' message.id %}">{{message.subject}}</a></li>
-        {% endif %}
-        {% endfor %}
-    </ul>
-
+    </div>
 </div>
-</div>
+{% elif request.user.kind == 2 %}
+<h3>加入者{{ request.user }}</h3>
+<div class="col-md-6 offset-md-3">
+            <div class="recommendation-recruitment">
+                <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">
+                    おすすめ募集記事
+                </h3>
+                <div class="card">
+        <div class="card-body" style="padding: 0;">
+                {% for recruit in query_set %}
+                <a href="{% url 'main:recruitment_detail' recruit.user.username recruit.id %}">
+                    <table class="table table-responsive-sm" style="margin-top: 0;">
+                        <tbody>
+                        <td>
+                            {% if not recruit.user.profile.image %}
+                            <img src="{% static 'amateurband/image/no_image.jpg' %}"
+                                 style="background-size: cover; height: 120px; width: 120px;"/>
+                            {% endif %}
+                            <img src="{{ recruit.user.profile.image.thumbnail.url }}">
+                        </td>
 
+                        <td>
+                            <h5>{{ recruit.title }}</h5>
+                            <p style="color: black;">{{ recruit.comment|truncatechars_html:40 }}</p>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </a>
+                {% endfor %}
+            {% include "amateurband/pagination.html" %}
+            </div>
+        </div>
+    </div>
+    <div class="message_list" style="margin-top: 28px;">
+        <h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 24px;">未読メッセージ</h3>
+
+        <ul>
+            {% if receive_messages.count == 0 %}
+            <p style="color: #fff;">未読メッセージはありません。</p>
+            {% endif %}
+            {% for message in receive_messages %}
+            {% if not message.unread%}
+            <li><a href="{% url 'main:message_detail' message.id %}">{{message.subject}}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+{% endif %}
+{% block extra_js %}
+<script src="{% static 'amateurband/js/script.js' %}">{% endblock %}
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<a href="{% url 'main:recruitment_detail' recruitment.id %}" style="margin-bottom: 26px; display: inline-block;">
+<a href="{% url 'main:recruitment_detail' request.user.username recruitment.id %}" style="margin-bottom: 26px; display: inline-block;">
     戻る
 </a>
-<form action="{% url 'main:edit_recruitment' recruitment.id %}" method="post">
+<form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 

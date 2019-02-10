@@ -1,80 +1,91 @@
 {% extends 'base.html'%}
+{% load static %}
 {% block content %}
 <div class="col-md-10 offset-md-1">
     {% if request.user.username == user.username %}
     <button><a href="{% url 'main:config_profile' %}">プロフィールを編集する</a></button>
     {% endif %}
-<h3 style="border-bottom: 1px solid #ccc; margin-bottom: 24px; padding: 6px;">
-    {{user.username}}
-</h3>
+    {% if user.kind == 1 %}
+    <h2 style="width: 50%; text-align: center; padding: 12px; margin: 24px auto; background-color: navy; color: #fff; border-radius: 8px;">募集者</h2>
+    {% elif user.kind == 2%}
+    <h2 style="width: 50%; text-align: center; padding: 12px; margin: 24px auto; background-color: green; color: #fff; border-radius: 8px;">加入者</h2>
+    {% endif %}
+    <h3 style="border-bottom: 1px solid #ccc; margin-bottom: 24px; padding: 6px;">
+        {{user.username}}
+    </h3>
     <div class="image-container" style="text-align: center; margin-bottom: 32px;">
         {% if user.profile.image %}
-            <a href="{{user.profile.image.url}}"><img src="{{ user.profile.image.large.url }}"></a>
-            {% endif %}
+        <a href="{{user.profile.image.url}}"><img src="{{ user.profile.image.large.url }}"></a>
+        {% else %}
+        <img src="{% static 'amateurband/image/no_image.jpg' %}"
+             style="background-size: cover; height: 300px; width: 300px;"/>
+        {% endif %}
     </div>
-<table class="table table-bordered table-responsive-sm">
-    <tbody>
+    <table class="table table-bordered table-responsive-sm">
+        <tbody>
 
-    <tr>
-        <th scope="row">年齢</th>
-        {% if user.profile.age == 1 %}
-        <td>10～20歳</td>0
-        {% elif user.profile.age == 2 %}
-        <td>20～30歳</td>
-        {% elif user.profile.age == 3 %}
-        <td>30～40歳</td>
-        {% elif user.profile.age == 4 %}
-        <td>40～50歳</td>
-        {% elif user.profile.age == 5 %}
-        <td>50～60歳</td>
-        {% elif user.profile.age == 6 %}
-        <td>60～70歳</td>
-        {% else %}
-        <td>None</td>
+        <tr>
+            <th scope="row">年齢</th>
+            {% if user.profile.age == 1 %}
+            <td>10～20歳</td>
+            {% elif user.profile.age == 2 %}
+            <td>20～30歳</td>
+            {% elif user.profile.age == 3 %}
+            <td>30～40歳</td>
+            {% elif user.profile.age == 4 %}
+            <td>40～50歳</td>
+            {% elif user.profile.age == 5 %}
+            <td>50～60歳</td>
+            {% elif user.profile.age == 6 %}
+            <td>60～70歳</td>
+            {% else %}
+            <td>None</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th scope="row">性別</th>
+            {% if user.profile.gender == 1 %}
+            <td>男性</td>
+            {% elif user.profile.gender == 2 %}
+            <td>女性</td>
+            {% else %}
+            <td>None</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th scope="row">担当楽器</th>
+            <td>{{ user.profile.instrument }}</td>
+        </tr>
+        <tr>
+            <th scope="row">演奏レベル</th>
+            <td>{{ user.profile.amateur_level }}</td>
+        </tr>
+        <tr>
+            <th scope="row">活動地域</th>
+            <td>{{ user.profile.area }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {% if user.kind == 1 %}
+    <div style="margin: 42px 0;">
+        <h3 style="border-bottom: 1px solid #ccc; margin-bottom: 24px; padding: 6px;">
+            {{ user.username }}さんが投稿した募集記事
+        </h3>
+        {% if not user.recruitment %}
+        <p>投稿した記事はありません</p>
         {% endif %}
-    </tr>
-    <tr>
-        <th scope="row">性別</th>
-        {% if user.profile.gender == 1 %}
-        <td>男性</td>
-        {% elif user.profile.gender == 2 %}
-        <td>女性</td>
-        {% else %}
-        <td>None</td>
-        {% endif %}
-    </tr>
-    <tr>
-        <th scope="row">担当楽器</th>
-        <td>{{ user.profile.instrument }}</td>
-    </tr>
-    <tr>
-        <th scope="row">演奏レベル</th>
-        <td>{{ user.profile.amateur_level }}</td>
-    </tr>
-    <tr>
-        <th scope="row">活動地域</th>
-        <td>{{ user.profile.area }}</td>
-    </tr>
-    </tbody>
-</table>
-<div style="margin: 42px 0;">
-<h3 style="border-bottom: 1px solid #ccc; margin-bottom: 24px; padding: 6px;">
-    {{ user.username }}さんが投稿した募集記事
-</h3>
-    {% if not user.recruitment %}
-    <p>投稿した記事はありません</p>
+        <ol>
+            {% for recruitment in user.recruitment.all %}
+            <li>
+                <p>{{ recruitment.updated_at }}</p>
+                <a href="{% url 'main:recruitment_detail' recruitment.user.username recruitment.id %}">
+                    {{ recruitment.title }}
+                </a>
+            </li>
+            <div style="height:2px; background-color: #ccc; margin-top: 12px;"></div>
+            {% endfor %}
+        </ol>
+    </div>
     {% endif %}
-    <ol>
-        {% for recruitment in user.recruitment.all %}
-        <li>
-        <p>{{ recruitment.updated_at }}</p>
-        <a href="{% url 'main:recruitment_detail' recruitment.id %}">
-            {{ recruitment.title }}
-        </a>
-        </li>
-        <div style="height:2px; background-color: #ccc; margin-top: 12px;"></div>
-        {% endfor %}
-    </ol>
 </div>
-
 {% endblock %}

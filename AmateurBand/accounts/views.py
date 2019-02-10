@@ -1,23 +1,37 @@
 from django.shortcuts import render, redirect, reverse
+from django.views.generic import FormView
+
 from .forms import SignUpForm, LoginForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class SignUpView(View):
+class RecruitEntryChoiceView(View):
     def get(self, request):
+        return render(request, 'accounts/recruit_entry.html')
 
-        context = {
-            'form': SignUpForm()
-        }
-        return render(request, 'accounts/signup.html', context)
 
-    def post(self, request):
-        form = SignUpForm(request.POST)
+class SignUpView(FormView):
+    form_class = SignUpForm
+    template_name = 'accounts/signup.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(SignUpView, self).get_form_kwargs()
+        kwargs['kind'] = self.kwargs.get('kind')
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(SignUpView, self).get_context_data(**kwargs)
+        context['kind'] = self.kwargs.get('kind')
+        return context
+
+    def post(self, request, **kwargs):
+        form = SignUpForm(request.POST, kind=kwargs.get('kind'))
         if not form.is_valid():
             return render(request, 'accounts/signup.html', {'form': form})
         user_info_save = form.save(commit=True)
+        print(user_info_save)
         auth_login(request, user_info_save)
 
         return redirect('main:config_profile')
@@ -26,27 +40,16 @@ class SignUpView(View):
 class LoginView(View):
     """ログインページ"""
     def get(self, request, **kwargs):
-        signupform = SignUpForm
         loginform = LoginForm
-        if kwargs.get('login_id') == 1:
-            login_id = 1
-        elif kwargs.get('login_id') == 2:
-            login_id = 2
-        elif kwargs.get('login_id') == 3:
-            login_id = 3
 
         context = {
-            'signupform': signupform,
             'loginform': loginform,
-            'login_id': login_id,
         }
         return render(request, 'accounts/login.html', context)
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
-        context = {'loginform': form,
-                   'signupform': SignUpForm,
-                   'login_id': kwargs.get('login_id')}
+        context = {'loginform': form}
 
         if not form.is_valid():
                         return render(request, 'accounts/login.html', context)
@@ -54,12 +57,7 @@ class LoginView(View):
         login_user = form.get_login_user()
         auth_login(request, login_user)
 
-        if kwargs.get('login_id') == 1:
-            return redirect('main:new_recruitment')
-        elif kwargs.get('login_id') == 2:
-            return redirect('main:recruitment_list')
-        elif kwargs.get('login_id') == 3:
-            return redirect('main:index')
+        return redirect('main:mypage')
 
 
 class LogoutView(LoginRequiredMixin, View):

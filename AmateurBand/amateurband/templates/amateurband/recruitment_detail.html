@@ -1,24 +1,79 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+{% if request.user.username == recruitment.user.username %}
+    <button><a href="{% url 'main:edit_profile' %}">プロフィールを編集する</a></button>
+    {% endif %}
+<h3 style="border-bottom: 1px solid #ccc; margin-bottom: 24px; padding: 6px;">
+    {{recruitment.user.username}}
+</h3>
+    <div class="image-container" style="text-align: center; margin-bottom: 32px;">
+        {% if recruitment.user.profile.image %}
+            <a href="{{recruitment.user.profile.image.url}}"><img src="{{ recruitment.user.profile.image.large.url }}"></a>
+        {% else %}
+        <img src="{% static 'amateurband/image/no_image.jpg' %}"
+             style="background-size: cover; height: 300px; width: 300px;"/>
+            {% endif %}
+    </div>
+<table class="table table-bordered table-responsive-sm">
+    <tbody>
+
+    <tr>
+        <th scope="row">年齢</th>
+        {% if recruitment.user.profile.age == 1 %}
+        <td>10～20歳</td>
+        {% elif recruitment.user.profile.age == 2 %}
+        <td>20～30歳</td>
+        {% elif recruitment.user.profile.age == 3 %}
+        <td>30～40歳</td>
+        {% elif recruitment.user.profile.age == 4 %}
+        <td>40～50歳</td>
+        {% elif recruitment.user.profile.age == 5 %}
+        <td>50～60歳</td>
+        {% elif recruitment.user.profile.age == 6 %}
+        <td>60～70歳</td>
+        {% else %}
+        <td>None</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <th scope="row">性別</th>
+        {% if recruitment.user.profile.gender == 1 %}
+        <td>男性</td>
+        {% elif recruitment.user.profile.gender == 2 %}
+        <td>女性</td>
+        {% else %}
+        <td>None</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <th scope="row">担当楽器</th>
+        <td>{{ recruitment.user.profile.instrument }}</td>
+    </tr>
+    <tr>
+        <th scope="row">演奏レベル</th>
+        <td>{{ recruitment.user.profile.amateur_level }}</td>
+    </tr>
+    <tr>
+        <th scope="row">活動地域</th>
+        <td>{{ recruitment.user.profile.area }}</td>
+    </tr>
+    </tbody>
+</table>
+
 <h3 style="margin-top: 36px; border-bottom: 1px solid #ccc; border-left:6px solid red; padding: 8px 12px;">
   {{ recruitment.title }}
 </h3>
 <div>
   {{ recruitment.comment | linebreaks | urlize }}
 </div>
-<div style="border-top: 3px solid #ccc;">
-{% for comment in comments %}
-  <h3>{{ comment.name }}</h3>
-  <p>{{ comment.text|linebreaksbr|urlize }}</p>
-  <div style="height: 1px; background-color: #ccc;"></div>
-{% endfor %}
-</div>
 <table class="table table-bordered table-responsive-sm">
         <thead>
         <tr>
             <th scope="col">募集年齢</th>
-            <th scope="col">募集パート</th>
-            <th scope="col">募集レベル</th>
+            <th scope="col">性別対象</th>
+            <th scope="col">担当</th>
+            <th scope="col">演奏レベル</th>
             <th scope="col">活動地域</th>
         </tr>
         </thead>
@@ -37,6 +92,13 @@
             {% elif recruitment.age == 6 %}
             <td>60～70歳</td>
             {% endif %}
+            {% if recruitment.gender == 1 %}
+            <td>男性</td>
+            {% elif recruitment.gender == 2 %}
+            <td>女性</td>
+            {% elif recruitment.gender == 3 %}
+            <td>男女問わない</td>
+            {% endif %}
             <td>{{ recruitment.instrument }}</td>
             {% if recruitment.amateur_level %}
             <td>初心者歓迎</td>
@@ -48,13 +110,43 @@
         <tr></tr>
         </tbody>
     </table>
+<div class="comment-container">
+    <h5>コメント欄</h5>
+    <ul>
+        {% for comment in comments %}
+        {% if comment.admission %}
+        <li>{{ comment.name }}</li>
+        <p style="border-bottom: 1px solid #ccc;padding: 6px;">{{ comment.text }}</p>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
 
 <div class="comment_message_btn" style="margin-top: 42px;">
 {% if not request.user.user_id == recruitment.user.user_id %}
 <button type="button" class="btn btn-primary" style="margin-right: 20px;"><a href="{% url 'main:new_comment' recruitment.id %}" style="color: #fff">コメントを書く</a></button>
 <button type="button" class="btn btn-success"><a href="{% url 'main:message' recruitment.user.username %}" style="color: #fff;">メッセージを送る</a></button>
 {% else %}
-<button><a href="{% url 'main:edit_recruitment' recruitment.id %}">募集記事を編集する</a></button>
+<button style="margin-bottom: 32px;"><a href="{% url 'main:edit_recruitment' recruitment.user.username recruitment.id %}">募集記事を編集する</a></button>
 {% endif %}
+</div>
+<div style="margin: 42px 0;">
+<h3 style="border-bottom: 1px solid #ccc; margin-bottom: 24px; padding: 6px;">
+    {{ recruitment.user.username }}さんが投稿した募集記事
+</h3>
+    {% if not user.recruitment %}
+    <p>投稿した記事はありません</p>
+    {% endif %}
+    <ol>
+        {% for recruitment in recruitments %}
+        <li>
+        <p>{{ recruitment.updated_at }}</p>
+        <a href="{% url 'main:recruitment_detail' recruitment.user.username recruitment.id %}">
+            {{ recruitment.title }}
+        </a>
+        </li>
+        <div style="height:2px; background-color: #ccc; margin-top: 12px;"></div>
+        {% endfor %}
+    </ol>
 </div>
 {% endblock %}

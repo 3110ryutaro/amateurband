@@ -16,12 +16,13 @@
         <li><a href="{% url 'main:home'%}">Home</a></li>
         <li><a href="{% url 'accounts:logout' %}" class="logout">Logout</a></li>
         {% else %}
-        <li><a href="{% url 'accounts:signup'%}">新規登録</a></li>
-        <li><a href="{% url 'accounts:login' 3 %}" class="login">Login</a></li>
+        <li><a href="{% url 'accounts:recruit_entry' %}">新規登録</a></li>
+        <li><a href="{% url 'accounts:login'%}" class="login">Login</a></li>
         {% endif %}
     </ul>
 </header>
 {% if user.is_authenticated %}
+{% if request.user.kind == 1 %}
 <div class="login-nav" style="margin-bottom: 62px;">
     <ul class="mypage_nav" style="padding: 12px 32px; background-color: blue;">
         <li style="display: inline-block; margin-right: 16px;">
@@ -47,6 +48,31 @@
     </ul>
 
 </div>
+{% elif request.user.kind == 2 %}
+<div class="login-nav" style="margin-bottom: 62px;">
+    <ul class="mypage_nav" style="padding: 12px 32px; background-color: #800000;">
+        <li style="display: inline-block; margin-right: 16px;">
+            <a href="{% url 'main:mypage' %}?page=1" style="color: #fff">マイページ</a>
+        </li>
+        <li style="display: inline-block; margin-right: 16px; font-weight: bold;">
+            <a href="{% url 'main:home' %}">募集記事を見に行く</a>
+        </li>
+        {% if request.user.receive_messages.exists %}
+        <li style="display: inline-block; margin-right: 16px;">
+            <a href="{% url 'main:message_list' %}" style="color: #fff">メッセージ一覧</a>
+        </li>
+        {% endif %}
+        <li style="display: inline-block; margin-right: 16px;">
+            <a href="{% url 'main:show_profile' %}" style="color: #fff">プロフィール</a>
+        </li>
+        <li style="display: inline-block; margin-right: 16px;">
+            <a href="{% url 'main:footprint' %}" style="color: #fff">足跡</a>
+        </li>
+    </ul>
+
+</div>
+
+{% endif %}
 {% endif %}
 {%block header_image %}{% endblock %}
 <div class="container mt-3">

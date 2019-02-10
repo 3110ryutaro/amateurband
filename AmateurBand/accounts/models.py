@@ -11,6 +11,7 @@ class AmateurUser(AbstractUser):
         primary_key=True,
         unique=True,
     )
+    kind = models.IntegerField()
     username = models.CharField(
         max_length=255,
         unique=True,

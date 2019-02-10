@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views import View
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import RecruitmentForm, SearchForm, RecruitmentCommentForm, SendingMessageForm, ProfileForm
-from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
-from django import forms
-from .models import Recruitment, RecruitmentComment, Footprint
-from django.views.generic import FormView, UpdateView
+from .models import Recruitment, RecruitmentComment, Footprint, UserProfile, SearchWord
+from django.db.models import Q
+from django.views.generic import FormView
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -24,36 +24,50 @@ class HomeView(View):
         elif s == "経験者":
             return False
 
-    def searchPass(self, **kwargs):
-        dict = {}
-        for key, value in kwargs.items():
-            if value != 'None':
-                dict[key] = value
-        return dict
-
-
     def get(self, request):
         recruitments = Recruitment.objects.all().order_by('-created_at')
         print(recruitments)
         form = SearchForm()
+
         if request.GET.get('q'):
-            recruitments = Recruitment.objects.filter(title__contains=request.GET.get('q'))
+            recruitments = Recruitment.objects.filter(Q(title__contains=request.GET.get('q')) |
+                                                      Q(instrument__contains=request.GET.get('q')) |
+                                                      Q(area__contains=self.return_str(request.GET.get('q'))) |
+                                                      Q(comment__contains=request.GET.get('q')))
+            if not SearchWord.objects.filter(word=request.GET.get('q')).exists():
+                SearchWord.objects.create(user=request.user, word=request.GET.get('q'))
+
         if request.GET.get('user_age'):
-            print(request.user)
             user_age = request.GET.get('user_age')
+            user_gender = request.GET.get('user_gender')
             user_instrument = request.GET.get('user_instrument')
             user_amateur_level = request.GET.get('user_amateur_level')
             user_area = request.GET.get('user_area')
-            recruitments = Recruitment.objects.filter(age=user_age,
+            recruitments = Recruitment.objects.filter(Q(gender=user_gender) | Q(gender=3),
+                                                      age=user_age,
                                                       instrument=user_instrument,
                                                       amateur_level=self.str2bool(user_amateur_level),
-                                                      area__contains=user_area)
+                                                      area__contains=self.return_str(user_area))
+
+            print(recruitments)
+        profile_none_users = UserProfile.objects.filter(Q(age__isnull=True) |
+                                                        Q(instrument__isnull=True) |
+                                                        Q(amateur_level__isnull=True) |
+                                                        Q(area__isnull=True))
+        user = None
+        for none_user in profile_none_users:
+            if none_user.user.user_id == request.user.user_id:
+                user = none_user
 
         context = {
             'recruitments': recruitments,
             'form': form,
+            'profile_none_user': user
         }
         return render(request, 'amateurband/home.html', context)
+
+    def return_str(self, s):
+        return s[0:2]
 
 
 class RecruitmentCreateView(LoginRequiredMixin, FormView):
@@ -77,21 +91,9 @@ class RecruitmentCreateView(LoginRequiredMixin, FormView):
             return render(request, 'amateurband/recruitment.html', {'form': form})
 
 
-class RecruitmentDetailView(View):
-    def get(self, request, recruitment_id):
-        recruitment = get_object_or_404(Recruitment, pk=recruitment_id)
-        comments = recruitment.recruitment_comment.order_by('-created_date')
-        context = {
-            'recruitment': recruitment,
-            'comments': comments
-        }
-        return render(request, 'amateurband/recruitment_detail.html', context)
-
-
-class RecruitmentEditView(View):
-
+class RecruitEditView(View):
     def get(self, request, *args, **kwargs):
-        recruitment = get_object_or_404(Recruitment, pk=kwargs.get('recruitment_id'))
+        recruitment = get_object_or_404(Recruitment, pk=self.kwargs.get('recruitment_id'))
         form = RecruitmentForm(instance=recruitment, user=request.user)
         context = {
             'form': form,
@@ -100,11 +102,32 @@ class RecruitmentEditView(View):
         return render(request, 'amateurband/recruitment_edit.html', context)
 
     def post(self, request, **kwargs):
-        recruitment = get_object_or_404(Recruitment, pk=kwargs.get('recruitment_id'))
+        recruitment = get_object_or_404(Recruitment, pk=self.kwargs.get('recruitment_id'))
         form = RecruitmentForm(request.POST, instance=recruitment, user=request.user)
         if form.is_valid():
             form.save(commit=True)
-            return redirect(reverse('main:recruitment_detail', kwargs={'recruitment_id': recruitment.id}))
+            return redirect(reverse('main:recruitment_detail', kwargs={'recruitment_id': recruitment.id,
+                                                                       'username': recruitment.user.username}))
+
+
+class RecruitmentDetailView(View):
+    def get(self, request, **kwargs):
+        recruitment = get_object_or_404(Recruitment, pk=kwargs.get('recruitment_id'))
+        recruitment_user = get_object_or_404(AmateurUser, username=kwargs.get('username'))
+        recruitments = recruitment_user.recruitment.all().order_by('-updated_at')
+        comments = recruitment.recruitment_comment.order_by('-created_date')
+        context = {
+            'recruitment': recruitment,
+            'recruitments': recruitments,
+            'comments': comments,
+        }
+        if Footprint.objects.filter(user=request.user):
+            request.user.footprint.footprint_user.add(recruitment_user)
+        else:
+            Footprint.objects.create(user=request.user)
+            request.user.footprint.footprint_user.add(recruitment_user)
+
+        return render(request, 'amateurband/recruitment_detail.html', context)
 
 
 class RecruitmentCommentView(FormView):
@@ -127,7 +150,8 @@ class RecruitmentCommentView(FormView):
         if form.is_valid():
             form.save(commit=True)
             return redirect(reverse('main:recruitment_detail',
-                                    kwargs={'recruitment_id': recruitment.id}))
+                                    kwargs={'recruitment_id': recruitment.id,
+                                            'username': recruitment.user.username}))
 
 
 class MyPageView(View):
@@ -136,13 +160,66 @@ class MyPageView(View):
         receive_messages = user.receive_messages.filter(unread=False).order_by('-receiving_date')[:5]
         sending_messages = user.sending_messages.all()
         recruitments = user.recruitment.all().order_by('-updated_at')[:5]
+        words = user.searchwords.all()
+        print(words)
+        query_set = []
+        for w in words:
+            q1 = Recruitment.objects.filter()
+            q2 = q1.filter(Q(title__contains=w.word) |
+                           Q(instrument__contains=w.word) |
+                           Q(area__contains=w.word) |
+                           Q(comment__contains=w.word))
+            for q in q2:
+                if q not in query_set:
+                    query_set.append(q)
+
         context = {
             'user': user,
             'recruitments': recruitments,
             'receive_messages': receive_messages,
             'sending_messages': sending_messages,
+            'query_set': self.returnQuerySet(query_set),
+            'page': self.querySetCount(query_set),
+            'page_active': int(request.GET.get('page')),
+            'page_last': 5,
         }
         return render(request, 'amateurband/mypage.html', context)
+
+    def querySetCount(self, *args):
+        page_count = int(len(*args) / 5)
+        return range(1, page_count + 2)
+
+    def returnQuerySet(self, args):
+        query_set = []
+        page = self.request.GET.get('page')
+        if page == "1":
+            query_set = args[0:5]
+        elif page == "2":
+            query_set = args[5:10]
+        elif page == "3":
+            query_set = args[10:15]
+        elif page == "4":
+            query_set = args[15:20]
+        elif page == "5":
+            query_set = args[20:25]
+        elif page == "6":
+            query_set = args[25:30]
+        elif page == "7":
+            query_set = args[30:35]
+        elif page == "8":
+            query_set = args[35:40]
+        elif page == "9":
+            query_set = args[40:45]
+        elif page == "10":
+            query_set = args[45:50]
+        return query_set
+
+    def post(self, request):
+        if request.POST.get('comment_id'):
+            comment = get_object_or_404(RecruitmentComment, pk=request.POST.get('comment_id'))
+            comment.admission = True
+            comment.save()
+        return redirect('main:mypage')
 
 
 class MyRecruitmentListView(View):
@@ -298,7 +375,7 @@ class MessageReplyView(FormView):
             form.save(commit=True)
 
             return redirect(reverse('main:message_reply',
-                            kwargs={'sending_username': receive_user.username}))
+                                    kwargs={'sending_username': receive_user.username}))
 
 
 class UserDetailView(View):

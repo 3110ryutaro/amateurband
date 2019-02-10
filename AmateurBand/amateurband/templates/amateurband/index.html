@@ -51,13 +51,13 @@ padding: 12px; width: 120px;">加入する</a>
         バンドメンバーを一から募集したい。足りないパートのメンバーを募集したい。
         という方は、こちらからどうぞ。
     </p>
-    <a href="{% url 'accounts:login' 1 %}" class="btn boshu-btn"
+    <a href="{% url 'accounts:kind_signup' 1 %}" class="btn boshu-btn"
     style="background-color: navy; border-radius: 6px; color: #fff;
 padding: 12px; width: 120px;">募集する</a>
     <p style="margin-top: 20px">
         既存のバンドに加入したいという方はこちらからどうぞ。
     </p>
-    <a href="{% url 'accounts:login' 2 %}" class="btn kanyu-btn"
+    <a href="{% url 'accounts:kind_signup' 2 %}" class="btn kanyu-btn"
     style="background-color: green; border-radius: 6px; color: #fff;
 padding: 12px; width: 120px;">加入する</a>
     {% endif %}

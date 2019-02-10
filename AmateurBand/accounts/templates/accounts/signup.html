@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="col-md-6 offset-md-3">
+<div class="col-md-6 offset-md-3" style="margin-top: 32px;">
     <p>※Usernameは半角英数字を使用してください。</p>
-    <form action="{% url 'accounts:signup' %}" method="post">
-
+    <form action="{% url 'accounts:kind_signup' kind %}" method="post">
         <div class="card">
             <div class="card-body">
                 {{ form.non_field_errors }}
@@ -17,6 +16,6 @@
                 {% csrf_token %}
             </div>
         </div>
-</div>
 </form>
+</div>
 {% endblock %}

@@ -15,6 +15,11 @@ GENDER_CHOICES = (
     (1, '男性'),
     (2, '女性'),
 )
+RECRUITMENT_GENDER_CHOICES = (
+    (1, '男性'),
+    (2, '女性'),
+    (3, '男女問わない')
+)
 INSTRUMENT_CHOICES = (
         ('ヴォーカル', 'ヴォーカル'),
         ('ギター', 'ギター'),
@@ -58,6 +63,16 @@ class UserProfile(models.Model):
                             blank=True, null=True)
 
 
+class SearchWord(models.Model):
+    user = models.ForeignKey(AmateurUser,
+                             related_name='searchwords',
+                             on_delete=models.CASCADE)
+    word = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.word
+
+
 class Footprint(models.Model):
     user = models.OneToOneField(AmateurUser, on_delete=models.CASCADE)
     footprint_user = models.ManyToManyField(AmateurUser,
@@ -67,18 +82,19 @@ class Footprint(models.Model):
 
 class Recruitment(models.Model):
 
+    public = models.BooleanField(default=False, verbose_name='公開しない')
     user = models.ForeignKey(AmateurUser,
                              related_name='recruitment',
                              on_delete=models.CASCADE)
     title = models.CharField(max_length=100, verbose_name='タイトル')
+    gender = models.IntegerField(verbose_name='性別対象',
+                                 choices=RECRUITMENT_GENDER_CHOICES)
     instrument = models.CharField(max_length=10,
                                   verbose_name='募集楽器',
-                                  choices=INSTRUMENT_CHOICES,
-                                  blank=True, null=True)
+                                  choices=INSTRUMENT_CHOICES,)
     amateur_level = models.BooleanField(default=False, verbose_name='初心者歓迎')
     age = models.IntegerField(verbose_name='年齢制限',
-                              choices=AGE_CHOICES,
-                              blank=True, null=True)
+                              choices=AGE_CHOICES,)
     area = models.CharField(verbose_name='活動地域', max_length=100)
     comment = models.TextField(verbose_name='コメント')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -97,6 +113,7 @@ class RecruitmentComment(models.Model):
                              related_name='user_comment')
     name = models.CharField(max_length=200)
     text = models.TextField()
+    admission = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
 
