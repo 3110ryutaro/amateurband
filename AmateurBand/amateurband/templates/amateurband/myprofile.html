@@ -1,16 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
+{% if request.user.kind == 1 %}
+{% block recruit_mypage_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-recruit-mypage.css'%}">
+{% endblock %}
+{% elif request.user.kind == 2 %}
+{% block entry_mypage_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-entry.css'%}">
+{% endblock %}
+{% endif %}
 {% block content %}
 <div class="col-md-6 offset-md-3">
 <table class="table table-bordered table-responsive-sm">
     <thead>
-    <tr>
+    <tr class="table-primary">
         <th scope="col">ユーザー名</th>
         <td>{{ user.username }}</td>
     </tr>
     </thead>
     <tbody>
-    <tr>
+    <tr class="table-light">
         <th scope="row">プロフィール画像</th>
         <td style="text-align: center;">{% if user.profile.image %}
             <a href="{{user.profile.image.url}}"><img src="{{ user.profile.image.medium.url }}"></a>
@@ -19,7 +28,7 @@
             {% endif %}
         </td>
     </tr>
-    <tr>
+    <tr class="table-light">
         <th scope="row">年齢</th>
         {% if user.profile.age == 1 %}
         <td>10～20歳</td>0
@@ -37,7 +46,7 @@
         <td>None</td>
         {% endif %}
     </tr>
-    <tr>
+    <tr class="table-light">
         <th scope="row">性別</th>
         {% if user.profile.gender == 1 %}
         <td>男性</td>
@@ -47,15 +56,15 @@
         <td>None</td>
         {% endif %}
     </tr>
-    <tr>
+    <tr class="table-light">
         <th scope="row">担当楽器</th>
         <td>{{ user.profile.instrument }}</td>
     </tr>
-    <tr>
+    <tr class="table-light">
         <th scope="row">演奏レベル</th>
         <td>{{ user.profile.amateur_level }}</td>
     </tr>
-    <tr>
+    <tr class="table-light">
         <th scope="row">活動地域</th>
         <td>{{ user.profile.area }}</td>
     </tr>

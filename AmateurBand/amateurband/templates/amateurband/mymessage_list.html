@@ -1,30 +1,202 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-mypage.css'%}">
+{% block recruit_mypage_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-recruit-mypage.css'%}">
 {% endblock %}
+{% block extra_js %}
+<script src="{% static 'amateurband/js/message-list.js' %}"></script>{% endblock %}
 {% block content %}
- <div class="col-md-6 offset-md-3">
-{% for message in receive_messages %}
-    <table class="table table-bordered table-responsive-sm" style="margin-top: 0;">
-        <tbody>
-        <tr>
-            <td>
-                <a href="{% url 'main:user_detail' message.sending_user.username%}">
-                <img src="{{ message.sending_user.profile.image.thumbnail.url }}">
-                </a>
-            </td>
-            <td>
-                <h5 style="color: #fff;">
-                    <a href="{% url 'main:message_detail' message.id %}">
-                        {{ message.subject }}
-                    </a>
-                </h5>
-                <p style="color: #fff;">{{ message.text|linebreaksbr|urlize|truncatechars_html:30 }}</p>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    {% endfor %}
- </div>
+<div class="mail-btn" style="margin-bottom: 18px;">
+    <button id="receive" class="btn btn-danger" style="display: inline-block; margin-right: 8px;">受信</button>
+    <button id="send" class="btn btn-light">送信</button>
+    <button style="float: right;" id="user-btn" class="btn btn-info">ユーザーで分ける</button>
+</div>
+<div class="receive-index col-md-6 offset-md-3">
+    <div class="container-fluid">
+        {% for message in receive_messages %}
+        <div class="card" style="margin-bottom: 18px;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        {% if message.sending_user.profile.gender ==  1%}
+                        <p style="text-align: center; color: blue;">{{ message.sending_user.username }}</p>
+                        {% elif message.sending_user.profile.gender == 2%}
+                        <p style="text-align: center; color: red;">{{ message.sending_user.username|truncatechars_html:13 }}</p>
+                        {% else %}
+                        <p style="text-align: center; color: gray;">{{ message.sending_user.username|truncatechars_html:13 }}</p>
+                        {% endif %}
+                        {% if message.sending_user.profile.image %}
+                        <div>
+                            <a href="{% url 'main:user_detail' message.sending_user.username%}">
+                                <img src="{{ message.sending_user.profile.image.thumbnail.url }}">
+                            </a>
+                        </div>
+                        {% else %}
+                        <a href="{% url 'main:user_detail' message.sending_user.username%}">
+                        <img src="{% static 'amateurband/image/no_image.jpg' %}"
+                             style="background-size: cover; height: 120px; width: 120px;"/>
+                        </a>
+                        {% endif %}
+
+                    </div>
+                    <div class="col-sm-8">
+
+                        <p>
+
+                            {{ message.subject|linebreaksbr }}
+
+                        </p>
+                        <hr>
+                        <div class="message-group">
+                        <div class="description" style="color: black;">
+                            {{ message.text|linebreaksbr|urlize|truncatechars_html:20 }}
+                        </div>
+                        <div class="read-more">
+                            <p class="receive-text" style="color: blue; cursor:pointer;">詳細を読む</p>
+                            <div class="card-container" style="display: none; margin-bottom: 18px;">
+                                <div class="card more-text">
+                                    <div class="card-body" style="position: relative;">
+                                        <p style="color: black;">{{ message.text|linebreaksbr|urlize }}</p>
+                                        <p class="receive-close-text"
+                                           style="position: absolute; right: 2px; bottom: -20px; font-size: 1.3rem; cursor: pointer;">
+                                            ×
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <a href="{% url 'main:message_detail' message.id %}">
+                            <button class="btn btn-success">返信</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+<!--送信画面遷移-->
+<div class="send-index col-md-6 offset-md-3" style="display: none;">
+    <div class="container-fluid">
+        {% for message in sending_messages %}
+        <div class="card" style="margin-bottom: 18px;">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <th>宛先</th>
+                    <td><a href="{% url 'main:user_detail' message.receive_user.username %}">{{ message.receive_user.username }}</a></td>
+                    </thead>
+                    <th>件名</th>
+                    <td>{{message.subject }}</td>
+                    <tbody>
+                    <th>本文</th>
+                    <td>{{ message.text|linebreaksbr|urlize|truncatechars_html:20 }}
+                        <p class="sending-btn" style="color: blue; cursor:pointer;">詳細を読む</p>
+                    </td>
+                    <td class="sending-text" style="display: none; position: relative">
+                        {{ message.text|linebreaksbr|urlize }}
+                        <p class="sending-close-text"
+                           style="position: absolute; right: 0; font-size: 1.3rem; cursor: pointer;">
+                            ×
+                        </p>
+                    </td>
+                    </tbody>
+                    <tfoot>
+
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<!--ユーザーで分ける、遷移画面-->
+<div class="user-index col-md-8 offset-md-2" style="display: none;">
+    <div class="row">
+        {% for sending_user in user_list %}
+        <!--10列幅分のボックス-->
+        <div class="col-xs-5 bg-primary">
+            <p style="color:#fff; text-align: center; margin-bottom: 0;">{{ sending_user.username|truncatechars_html:8 }}</p>
+            {% if sending_user.profile.image %}
+            <div  class="user-thumb" data-number="{{ forloop.counter }}" style="cursor:pointer;">
+                <span><img
+                        src="{{ sending_user.profile.image.thumbnail.url }}"></span>
+            </div>
+            {% else %}
+            <div  class="user-thumb" data-number="{{ forloop.counter }}" style="cursor:pointer;">
+            <span><img src="{% static 'amateurband/image/no_image.jpg' %}"
+                                          style="cursor: pointer; background-size: cover; height: 120px; width: 120px;"/></span>
+            </div>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+<!--詳細メール画面-->
+<div class="show-index">
+    {% for sending_user in user_list %}
+    {% for subject in sending_user.sending_messages.all %}
+<div class="show-card-{{ forloop.parentloop.counter }} col-md-6 offset-md-3" style="display: none;">
+    <div class="card" style="margin-bottom: 18px;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        {% if sending_user.profile.image %}
+                        <div>
+                            <a href="{% url 'main:user_detail' sending_user.username%}">
+                                <img src="{{ sending_user.profile.image.thumbnail.url }}">
+                            </a>
+                        </div>
+                        {% else %}
+                        <a href="{% url 'main:user_detail' sending_user.username%}">
+                                <img src="{% static 'amateurband/image/no_image.jpg' %}"
+                             style="background-size: cover; height: 120px; width: 120px;"/>
+                            </a>
+                        {% endif %}
+
+                    </div>
+                    <div class="col-sm-8">
+
+                        <p>
+
+                            {{ subject.subject|linebreaksbr }}
+
+                        </p>
+                        <hr>
+                        <div class="description" style="color: black;">
+                            {{ subject.text|linebreaksbr|urlize|truncatechars_html:20 }}
+                        </div>
+                        <div class="read-more">
+                            <p class="receive-text" style="color: blue; cursor:pointer;">詳細を読む</p>
+                            <div class="card-container" style="display: none; margin-bottom: 18px;">
+                                <div class="card more-text">
+                                    <div class="card-body" style="position: relative;">
+                                        <p style="color: black;">{{ subject.text|linebreaksbr|urlize }}</p>
+                                        <p class="receive-close-text"
+                                           style="position: absolute; right: 2px; bottom: -20px; font-size: 1.3rem; cursor: pointer;">
+                                            ×
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'main:message_detail' subject.id %}">
+                            <button class="btn btn-success">返信</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% endfor %}
+{% endfor %}
+</div>
+
 {% endblock %}

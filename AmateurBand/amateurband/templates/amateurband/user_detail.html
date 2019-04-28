@@ -54,15 +54,27 @@
         </tr>
         <tr>
             <th scope="row">担当楽器</th>
+            {% if not user.profile.instrument %}
+            <td>None</td>
+            {% else %}
             <td>{{ user.profile.instrument }}</td>
+            {% endif %}
         </tr>
         <tr>
             <th scope="row">演奏レベル</th>
+            {% if not user.profile.amateur_level %}
+            <td>None</td>
+            {% else %}
             <td>{{ user.profile.amateur_level }}</td>
+            {% endif %}
         </tr>
         <tr>
             <th scope="row">活動地域</th>
+            {% if not user.profile.area %}
+            <td>None</td>
+            {% else %}
             <td>{{ user.profile.area }}</td>
+            {% endif %}
         </tr>
         </tbody>
     </table>
@@ -87,5 +99,8 @@
         </ol>
     </div>
     {% endif %}
+    <div class="message-btn">
+    <button type="button" class="btn btn-success"><a href="{% url 'main:message' user.username %}" style="color: #fff;">メッセージを送る</a></button>
+    </div>
 </div>
 {% endblock %}

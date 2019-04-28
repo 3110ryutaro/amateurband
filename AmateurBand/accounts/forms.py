@@ -2,6 +2,9 @@ from .models import AmateurUser
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import UsernameField
+from django.contrib.auth.forms import (PasswordChangeForm,
+                                       PasswordResetForm, SetPasswordForm
+                                       )
 
 
 class SignUpForm(forms.ModelForm):
@@ -10,7 +13,7 @@ class SignUpForm(forms.ModelForm):
         fields = ('username', 'email', 'password',)
 
     confirm_password = forms.CharField(
-        label='confirm-password',
+        label='Confirm-Password',
         required=True,
         strip=False,
     )
@@ -110,3 +113,31 @@ class LoginForm(forms.Form):
     def get_login_user(self):
         """ユーザ名、データベースIDなどを表す引数 user_id をとり、対応するUserオブジェクトを返す。"""
         return self.user_request_to_login
+
+
+class MyPasswordChangeForm(PasswordChangeForm):
+    """パスワード変更フォーム"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class MyPasswordResetForm(PasswordResetForm):
+    """パスワード忘れたときのフォーム"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class MySetPasswordForm(SetPasswordForm):
+    """パスワード再設定用フォーム(パスワード忘れて再設定)"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+

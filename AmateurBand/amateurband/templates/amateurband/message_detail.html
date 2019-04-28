@@ -1,34 +1,62 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block header%}
 {% endblock %}
 {% block content %}
-<a href="{% url 'main:mypage' %}">戻る</a>
-<div class="col-md-6 offset-md-3">
-    <div class="message-container">
-        <table class="table table-bordered table-responsive-sm">
-            <tbody>
-            <tr>
-                <th scope="row">送信元</th>
-                <td><h4>{{message.sending_user.username}}</h4></td>
-            </tr>
-            　
-            <tr>
-                <th scope="row">件名</th>
-                <td>{{ message.subject }}</td>
-            </tr>
-            　
-            <tr>
-                <th scope="row">本文</th>
-                <td>{{ message.text|urlize|linebreaksbr }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="reply_button">
+<a href="{% url 'main:mypage' %}?page=1">戻る</a>
+<div class="receive-index col-md-6 offset-md-3">
+    <div class="container-fluid">
+
+        <div class="card" style="margin-bottom: 18px;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        {% if message.sending_user.profile.gender ==  1%}
+                        <p style="text-align: center; color: blue;">{{ message.sending_user.username }}</p>
+                        {% elif message.sending_user.profile.gender == 2%}
+                        <p style="text-align: center; color: red;">{{ message.sending_user.username|truncatechars_html:13 }}</p>
+                        {% else %}
+                        <p style="text-align: center; color: gray;">{{ message.sending_user.username|truncatechars_html:13 }}</p>
+                        {% endif %}
+                        {% if message.sending_user.profile.image %}
+                        <div>
+                            <a href="{% url 'main:user_detail' message.sending_user.username%}">
+                                <img src="{{ message.sending_user.profile.image.thumbnail.url }}">
+                            </a>
+                        </div>
+                        {% else %}
+                        <a href="{% url 'main:user_detail' message.sending_user.username%}">
+                        <img src="{% static 'amateurband/image/no_image.jpg' %}"
+                             style="background-size: cover; height: 120px; width: 120px;"/>
+                        </a>
+                        {% endif %}
+
+                    </div>
+                    <div class="col-sm-8">
+
+                        <p>
+
+                            {{ message.subject|linebreaksbr }}
+
+                        </p>
+                        <hr>
+                        <div class="message-group" style="margin-bottom: 32px;">
+                        <div class="description" style="color: black;">
+                            {{ message.text|linebreaksbr|urlize }}
+                        </div>
+
+                        </div>
+                        <div class="reply_button">
             <button class="btn btn-success btn-sm"><a
                     href="{% url 'main:message_reply' message.sending_user.username %}"
                     style="color: #fff; padding: 8px;">返信</a></button>
         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>
 
 {% endblock %}

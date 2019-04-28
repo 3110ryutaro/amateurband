@@ -1,8 +1,4 @@
 $(function() {
-$('#aaa').click(function() {
+$('.flush-message').fadeOut(5000);
 
-$('.hidden-print').hidden();
-$('.show-print').fadeIn();
 })
-
-});

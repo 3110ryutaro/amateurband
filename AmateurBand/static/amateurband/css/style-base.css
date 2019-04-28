@@ -1,5 +1,6 @@
 body {
 box-sizing: border-box;
+font-family: "Noto Sans JP";
 }
 header {
 color: #fff;
@@ -25,10 +26,58 @@ text-decoration: none;
 color: red;
 }
 
+.mypage-nav {
+margin-bottom: 32px;
+}
+
+.nav {
+padding: 12px 32px;
+}
+
+.nav li {
+display: inline-block;
+ margin-right: 16px;
+}
+
+.nav li a {
+color: #fff
+}
+
+.flush-message > p {
+padding: 12px; color: #fff;
+margin-bottom: 0;
+}
+
+.info {
+background-color: #007bff;
+}
+
+.warning {
+background-color: #dc3545;
+}
+
+.success {
+background-color: #28a745;
+}
+
+.error {
+background-color: #e0a800;
+}
+
+.recruit-nav {
+background-color: blue;
+}
+
+.entry-nav {
+background-color: #00DD00;
+}
+
+
 a:hover {
 text-decoration: none;
 opacity: 0.5;
 }
+
 
 header ul {
 float: right;
@@ -46,7 +95,105 @@ padding: 12px;
 
 .amateur-nav li a:hover{
 text-decoration: none;
-color: #fff;
+color: #ccc;
 }
 
+.header-image-container {
+text-align: center;
+}
+
+.header-image-container h2 {
+letter-spacing: 4px;
+margin-top: 24px;
+}
+
+.header-image-container .image-box img {
+background-size: cover;
+}
+
+.introduce h2 {
+margin: 24px 0;
+border-bottom: 1px solid #ccc;
+border-left: 6px solid black;
+padding: 0 12px;
+margin-top: 36px;
+}
+
+.how-to-use {
+list-style: disc;
+}
+
+.how-to-use li {
+padding: 12px;
+}
+
+.member-search h2 {
+border-bottom: 1px solid #ccc;
+padding: 0 12px;
+border-left: 6px solid black;
+margin-top: 36px;
+}
+
+.member-button {
+padding: 8px;
+}
+
+.member-button p {
+font-size: 1.2rem;
+}
+
+.btn-container {
+text-align: center;
+margin-bottom: 32px;
+}
+
+.login-container {
+margin-top: 60px;
+}
+
+.action-btn:hover {
+	background: #EC407A;
+	color: #fff;
+	opacity: 0.5;
+}
+
+.recruit-btn {
+border: 2px solid navy;
+color: navy;
+font-size: 1.6rem;
+}
+
+.recruit-btn:hover {
+background-color: navy;
+color: #fff;
+opacity: 1.0;
+}
+
+.entry-btn {
+border: 2px solid green;
+color: green;
+font-size: 1.6rem;
+}
+
+.entry-btn:hover {
+background-color: green;
+color: #fff;
+opacity: 1.0;
+}
+
+.recruit-mypage {
+
+}
+
+.entry-mypage {
+
+}
+
+.mail-btn {
+margin-bottom: 18px;
+}
+
+.message-btn {
+margin-bottom: 32px;
+}
 

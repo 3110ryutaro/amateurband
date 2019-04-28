@@ -1,40 +1,46 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md">
-      <h3 style="text-align: center; margin-top: 32px; border-bottom: 1px solid #ccc; padding-bottom: 8px;">メンバーを募集する</h3>
-        <ul>
-            <li style="padding: 8px;">バンドメンバーをいちから集めたい</li>
-            <li style="padding: 8px;">自分が中心となってメンバーを集めたい</li>
-            <li style="padding: 8px;">とにかくバンドを組みたい</li>
-            <p>etc...</p>
-        </ul>
-        <p>募集記事を書いて、未だ会うこともできていない<br>
-            最高の音楽仲間を見つけましょう。
-        </p>
-        <div style="text-align: center; margin: 32px 0;">
-        <a style="background-color: navy; color: #fff; border:2px solid #ccc; border-radius:8px; font-size: 2.8rem; padding: 12px" href="{% url 'accounts:kind_signup' 1%}">
-            募集する
-        </a>
+<div class="row">
+    <div class="card col-md-6">
+        <div class="card-body">
+            <h3 style="text-align: center; margin-top: 32px; border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+                メンバーを募集する</h3>
+            <ul>
+                <li style="padding: 8px;">バンドメンバーをいちから集めたい</li>
+                <li style="padding: 8px;">自分が中心となってメンバーを集めたい</li>
+                <li style="padding: 8px;">とにかくバンドを組みたい</li>
+                <p>etc...</p>
+            </ul>
+            <p>募集記事を書いて、未だ会うこともできていない<br>
+                最高の音楽仲間を見つけましょう。
+            </p>
+            <div style="text-align: center; margin: 32px 0;">
+                <a style="background-color: navy; color: #fff; border:2px solid #ccc; border-radius:8px; font-size: 2.8rem; padding: 12px"
+                   href="{% url 'accounts:kind_signup' 1%}">
+                    募集する
+                </a>
+            </div>
         </div>
     </div>
-    <div class="col-md">
-      <h3 style="text-align: center; margin-top: 32px; border-bottom: 1px solid #ccc; padding-bottom: 8px;">バンドに加入する</h3>
-        <ul>
-            <li style="padding: 8px;">既存のバンドに加入したい。</li>
-            <li style="padding: 8px;">必要とされるところに加入したい。</li>
-            <li style="padding: 8px;">すぐにでも楽器を演奏したい</li>
-            <p>etc...</p>
-        </ul>
-        <p>募集者の書く記事を見て、実際にコンタクトをとってみましょう。<br>
-        アクションを起こし、音楽仲間を見つけましょう。</p>
-        <div style="text-align: center; margin: 32px 0;">
-        <a style="background-color: green; color: #fff; border:2px solid #ccc; border-radius:8px; font-size: 2.8rem; padding: 12px" href="{% url 'accounts:kind_signup' 2%}">
-            加入する
-        </a>
+        <div class="card col-md-6">
+            <div class="card-body">
+                <h3 style="text-align: center; margin-top: 32px; border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+                    バンドに加入する</h3>
+                <ul>
+                    <li style="padding: 8px;">既存のバンドに加入したい。</li>
+                    <li style="padding: 8px;">必要とされるところに加入したい。</li>
+                    <li style="padding: 8px;">すぐにでも楽器を演奏したい</li>
+                    <p>etc...</p>
+                </ul>
+                <p>募集者の書く記事を見て、実際にコンタクトをとってみましょう。<br>
+                    アクションを起こし、音楽仲間を見つけましょう。</p>
+                <div style="text-align: center; margin: 32px 0;">
+                    <a style="background-color: green; color: #fff; border:2px solid #ccc; border-radius:8px; font-size: 2.8rem; padding: 12px"
+                       href="{% url 'accounts:kind_signup' 2%}">
+                        加入する
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-  </div>
-</div>
 {% endblock %}

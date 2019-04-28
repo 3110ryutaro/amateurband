@@ -1,0 +1,39 @@
+body {
+background-color: #003333
+}
+
+h3 {
+border-bottom: 1px solid #ccc;
+padding-bottom: 4px;
+padding-left: 18px;
+margin-bottom: 12px;
+}
+
+.recruit-list {
+border-left: 8px solid red;
+}
+
+.unread-message {
+border-left: 8px solid green;
+}
+
+.admission-comment {
+margin: 62px;
+}
+
+.comment {
+border-left: 8px solid blue;
+}
+
+.comment-wait {
+padding-left: 36px;
+}
+
+.recruitment-container p {
+font-size: 0.8rem;
+color: red;
+}
+
+.mail-btn {
+margin-bottom: 18px;
+}

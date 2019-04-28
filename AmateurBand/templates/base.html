@@ -5,67 +5,98 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'amateurband/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'amateurband/css/style-base.css' %}">
-    {% block extra_css %}{% endblock %}
+    {% block recruit_mypage_css %}{% endblock %}
+    {% block entry_mypage_css %}{% endblock %}
     <title>{% if request.path != '/'%}{% block title %}{% endblock %}{% endif %}AmateurBand</title>
+    <script src="{% static 'amateurband/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'amateurband/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'amateurband/js/script.js' %}"></script>
 </head>
 <body>
-<header>
-    <h1><a href="{% url 'main:index' %}">AmateurBand</a></h1>
-    <ul class="amateur-nav">
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'main:home'%}">Home</a></li>
-        <li><a href="{% url 'accounts:logout' %}" class="logout">Logout</a></li>
-        {% else %}
-        <li><a href="{% url 'accounts:recruit_entry' %}">新規登録</a></li>
-        <li><a href="{% url 'accounts:login'%}" class="login">Login</a></li>
-        {% endif %}
-    </ul>
-</header>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'main:index' %}">AmateurBand</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated %}
+            <li>
+                <a class="nav-item nav-link" href="{% url 'main:show_profile' %}">プロフィール</a>
+            </li>
+            <li>
+                <a class="nav-item nav-link" href="{% url 'main:edit_profile' %}">プロフィール更新</a>
+            </li>
+            <li>
+                <a class="nav-item nav-link" href="{% url 'accounts:logout' %}">ログアウト</a>
+            </li>
+            <li>
+                <a class="nav-item nav-link" href="{% url 'accounts:password_change' %}">パスワードの変更</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-item nav-link" href="{% url 'accounts:login' %}">
+                    ようこそ、ゲスト！ログイン,新規登録はこちら
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+{% if messages %}
+<div class="flush-message">
+    {% for message in messages %}
+    <p class="ui {% if message.tags%}{{ message.tags}}{% endif %}">{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
 {% if user.is_authenticated %}
 {% if request.user.kind == 1 %}
-<div class="login-nav" style="margin-bottom: 62px;">
-    <ul class="mypage_nav" style="padding: 12px 32px; background-color: blue;">
-        <li style="display: inline-block; margin-right: 16px;">
-            <a href="{% url 'main:mypage' %}" style="color: #fff">マイページ</a>
+<div class="mypage-nav">
+    <ul class="nav recruit-nav">
+        <li>
+            <a href="{% url 'main:mypage' %}">マイページ</a>
         </li>
-        <li style="display: inline-block; margin-right: 16px;">
+        <li>
             <a href="{% url 'main:new_recruitment' %}" style="color: #fff">募集記事を書く</a>
         </li>
         {% if request.user.receive_messages.exists %}
-        <li style="display: inline-block; margin-right: 16px;">
+        <li>
             <a href="{% url 'main:message_list' %}" style="color: #fff">メッセージ一覧</a>
         </li>
         {% endif %}
-        <li style="display: inline-block; margin-right: 16px;">
+        <li>
             <a href="{% url 'main:recruitment_list' %}" style="color: #fff">募集記事一覧</a>
         </li>
-        <li style="display: inline-block; margin-right: 16px;">
+        <li>
             <a href="{% url 'main:show_profile' %}" style="color: #fff">プロフィール</a>
         </li>
-        <li style="display: inline-block; margin-right: 16px;">
+        <li>
             <a href="{% url 'main:footprint' %}" style="color: #fff">足跡</a>
         </li>
     </ul>
 
 </div>
 {% elif request.user.kind == 2 %}
-<div class="login-nav" style="margin-bottom: 62px;">
-    <ul class="mypage_nav" style="padding: 12px 32px; background-color: #800000;">
-        <li style="display: inline-block; margin-right: 16px;">
-            <a href="{% url 'main:mypage' %}?page=1" style="color: #fff">マイページ</a>
+<div class="mypage-nav">
+    <ul class="nav entry-nav">
+        <li>
+            <a href="{% url 'main:mypage' %}?page=1">マイページ</a>
         </li>
-        <li style="display: inline-block; margin-right: 16px; font-weight: bold;">
+        <li>
             <a href="{% url 'main:home' %}">募集記事を見に行く</a>
         </li>
         {% if request.user.receive_messages.exists %}
-        <li style="display: inline-block; margin-right: 16px;">
+        <li>
             <a href="{% url 'main:message_list' %}" style="color: #fff">メッセージ一覧</a>
         </li>
         {% endif %}
-        <li style="display: inline-block; margin-right: 16px;">
+        <li>
             <a href="{% url 'main:show_profile' %}" style="color: #fff">プロフィール</a>
         </li>
-        <li style="display: inline-block; margin-right: 16px;">
+        <li>
             <a href="{% url 'main:footprint' %}" style="color: #fff">足跡</a>
         </li>
     </ul>
@@ -78,8 +109,6 @@
 <div class="container mt-3">
     {% block content %}{% endblock %}
 </div>
-<script src="{% static 'amateurband/js/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'amateurband/js/bootstrap.bundle.min.js' %}"></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

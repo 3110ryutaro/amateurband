@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -134,6 +135,11 @@ LOGIN_REDIRECT_URL = '/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+##STATIC_ROOT = 'C:\\Users\\S3110\\AmateurBand\\AmateurBand\\static'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

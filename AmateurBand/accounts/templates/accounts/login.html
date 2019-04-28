@@ -1,22 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="col-md-6 offset-md-3">
+<div class="row">
+    <!-- 左側、ログインエリア -->
+    <div class="card col-md-6">
+        <div class="card-body">
+            <form action="{% url 'accounts:login' %}" method="POST">
 
-    <form action="{% url 'accounts:login' %}" method="POST">
 
-        <div class="card">
-            <div class="card-body">
                 {{ loginform.non_field_errors }}
                 {% for field in loginform %}
                 {{ field }}
                 {{ field.errors }}
                 <hr>
                 {% endfor %}
-                <button type="submit" class="btn btn-success btn-lg btn-block">ログイン</button>
+                <button type="submit" class="action-btn btn login-btn btn-success btn-lg btn-block">ログイン</button>
                 <input type="hidden" name="next" value="{{ next }}"/>
                 {% csrf_token %}
-            </div>
+            </form>
+
         </div>
+    </div> <!--　左側、ログインエリアおわり -->
+
+    <!-- 右側、会員登録エリア -->
+    <div class="card col-md-6">
+        <div class="card-body">
+            <a href="{% url 'accounts:recruit_entry' %}" class="action-btn btn btn-success btn-lg btn-block">会員登録
+            </a><hr>
+             <a href="{% url 'accounts:password_reset' %}" class="action-btn btn btn-success btn-lg btn-block" >パスワードを忘れた方</a>
+        </div>
+
+
+    </div>
 </div>
-</form>
 {% endblock %}

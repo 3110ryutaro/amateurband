@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
+{% load static %}
+{% if request.user.kind == 1 %}
+{% block recruit_mypage_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-recruit-mypage.css'%}">
+{% endblock %}
+{% elif request.user.kind == 2 %}
+{% block entry_mypage_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-entry.css'%}">
+{% endblock %}
+{% endif %}
 {% block content %}
-<h3 style="border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 36px;">
+<h3 style="color: #fff; border-bottom: 1px solid #ccc; padding: 6px; margin-bottom: 36px;">
     {{ request.user }}さんのページに訪れた人の一覧
 </h3>
 {% if not footprint_users %}
@@ -9,7 +19,7 @@
 <div class="col-md-6 offset-md-3">
     <table class="table table-bordered table-responsive-sm">
         <thead>
-        <tr>
+        <tr class="table-light">
             <th scope="col">ユーザー名</th>
             <th scope="col">担当楽器</th>
             <th scope="col">属性</th>
@@ -17,20 +27,24 @@
         </thead>
         <tbody>
         {% for footprint_user in footprint_users %}
-        <tr>
+        <tr class="table-light">
 
             <td>
                 <a href="{% url 'main:user_detail' footprint_user.user.username %}">
                     {{ footprint_user.user.username }}
                 </a>
             </td>
+            {% if not footprint_user.user.profile.instrument %}
+            <td>None</td>
+            {% else %}
             <td>
                 {{ footprint_user.user.profile.instrument }}
             </td>
+            {% endif %}
                 {% if footprint_user.user.kind == 1 %}
-                <td>募集者</td>
+                <td class="bg-primary" style="color: #fff">募集者</td>
                 {% elif footprint_user.user.kind == 2 %}
-                <td>加入者</td>
+                <td class="bg-success" style="color: #fff">加入者</td>
                 {% endif %}
 
 
@@ -39,4 +53,5 @@
         </tbody>
 
     </table>
+</div>
         {% endblock %}

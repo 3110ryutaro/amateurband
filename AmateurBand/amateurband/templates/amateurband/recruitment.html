@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block recruit_mypage_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-recruit-mypage.css'%}">
+{% endblock %}
 {% block content %}
+<div class="recruitment-container" style="margin-bottom: 64px;">
 <form action="{% url 'main:new_recruitment' %}" method="POST">
        <div class="col-md-6 offset-md-3">
-           <p style="font-size: 0.8rem; color: red;">※現在、募集記事が必要ない場合は「公開しない」にチェックをつけてください。<br>
+           <p>※現在、募集記事が必要ない場合は「公開しない」にチェックをつけてください。<br>
            投稿した後からでも、変更は可能です。</p>
-           <p style="font-size: 0.8rem; color: red;">※初心者歓迎の場合は、「初心者歓迎」にチェックをつけてください。<br>
+           <p>※初心者歓迎の場合は、「初心者歓迎」にチェックをつけてください。<br>
            補足はコメントの方で記入をお願いします。</p>
         <div class="card">
             <div class="card-body">
@@ -22,4 +27,5 @@
         </div>
        </div>
     </form>
+</div>
 {% endblock %}

@@ -1,20 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block recruit_mypage_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'amateurband/css/styles-recruit-mypage.css'%}">
+{% endblock %}
 {% block content %}
 <div class="col-md-6 offset-md-3">
 {% if not recruitment_list%}
     <p>投稿した記事はありません</p>
 {% endif%}
+    <div class="card">
+        <div class="card-body">
+
 {% for recruitment in recruitment_list %}
 
 <a href="{% url 'main:recruitment_detail' recruitment.user.username recruitment.id %}" style="hover text_decoration: none;">
-    <table class="table table-bordered table-responsive-sm" style="margin-top: 0;">
-        <tbody>
-        <tr>
-            <td><h4 style="border-bottom: 1px solid #ccc;">{{ recruitment.title }}</h4>
-                <p style="color: black;">{{ recruitment.comment }}</p></td>
-        </tr>
-        </tbody>
-    </table>
+
+            <h4>{{ recruitment.title }}</h4>
+                <p style="color: black;">{{ recruitment.comment }}</p>
 </a>
     <table class="table table-bordered table-responsive-sm">
         <thead>
@@ -56,5 +58,7 @@
 <div style="height:2px; background-color: #ccc; margin: 24px 0;"></div>
 
 {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}
